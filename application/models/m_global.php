@@ -125,6 +125,11 @@ class M_global extends CI_Model {
 		
 		return $this->db->query($q)->result_array();
 		}
+		
+		function grid_view($q) {
+		
+		return $this->db->query($q);
+		}
 	
 		function tampil_header(){
 			if($this->session->userdata('logged_in')){

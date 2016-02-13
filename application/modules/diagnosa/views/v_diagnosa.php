@@ -1,101 +1,71 @@
                         
 
 <div class="row">
-
-
-
-
             <div class="row">
-              
-                  
-                        
-                     <h4 class="col-xs-12 col-sm-10 col-md-10 col-lg-10 "><u>List diagnosa</u></h4>
-                    
-                    
-                        
-               
-                   
+                 <h4 class="col-xs-12 col-sm-12 col-md-12 col-lg-12 "><strong><u>Diagnosa</u></strong></h4>
 			</div>
-							<?php
-								$attributes = array('class' => 'form-group','name' => 'form_diagnosa41', 'id' => 'form_diagnosa41');
-								echo form_open('', $attributes);
-								?>
-								
-                                   
-                                   <input name="diag_aktif41" id="diag_aktif41" type="hidden" value="" />
-								      
-                                   <input name="diag_id41" id="diag_id41" type="hidden" value="" />
+				<?php
+					$attributes = array('class' => 'form-group','name' => 'form_diagnosa12', 'id' => 'form_diagnosa12');
+					echo form_open('', $attributes);
+					?>
+						   
+                                   <input name="diag_id12" id="diag_id12" type="hidden" value="" />
 								   						   
 		<div class="row">						      
 					 
-					 <div class="col-xs-8 col-sm-4 col-md-4 col-lg-4">  
-					 
-                                    <label>Kode</label>
-                                    <div class="field">
+					 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+                           <label>Kode</label>
+                                <div class="field">
 										 										
-                                        <input name="diag_kode41" id="diag_kode41" type="text"  class="xxwide text input validate[required] form-control" placeholder="Kode" value="" />
+                                        <input name="diag_kode12" id="diag_kode12" type="text"  class=" validate[required] form-control" placeholder="Kode" value="" />
 										 
-                                    </div>
-                             </div>   
+                	          </div>
+                     </div>   
 					 
-					 <div class="col-xs-8 col-sm-4 col-md-4 col-lg-4">  
-					 
-                                    <label>Diagnosa</label>
-                                    <div class="field">
+					 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+                           <label>Diagnosa</label>
+                                <div class="field">
 										 										
-                                        <input name="diag_nama41" id="diag_nama41" type="text"  class="xxwide text input validate[required] form-control" placeholder="Diagnosa" value="" />
+                                        <input name="diag_nama12" id="diag_nama12" type="text"  class=" validate[required] form-control" placeholder="Diagnosa" value="" />
 										 
-                                    </div>
-                             </div>   
-					 
-					 <div class="col-xs-8 col-sm-4 col-md-4 col-lg-4">  
-					 
-                                    <label>Status</label>
-                                    <div class="field">
-<?=form_dropdown('status41',$status41,'','id="status41"  class="form-control"')?>
-										
-
- 
-                                    </div>
-                             </div></div>   
-                                          
-                                            
+                	          </div>
+                     </div>   
+						 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+					         <label>Status</label>
+                               <div class="field">
+									<?=form_dropdown('diag_aktif12',$diag_aktif12,'','id="diag_aktif12"  class="form-control"')?>
+								</div>
+                         </div></div>   
+                        
+        <br/>                                    
          <div class="row">                            
-            			
-			<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
-             	
-            	 <input type="button" id="simpandata41" class="btn btn-success" value="Simpan">  
-                 <input  type="button"  id="batal41" class="btn btn-info" value="Batal">  
-                 <input  type="button" id="hpus41" class="btn btn-danger" value="Hapus">  
-				 <a href='<?=site_url('diagnosa/export_pdf41')?>'	target='_blank'  class="btn btn-success"id="tampil_pdf41" >
+            <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
+               	 <input type="button" id="simpandata12" class="btn btn-success" value="Simpan">  
+                 <input  type="button"  id="batal12" class="btn btn-info" value="Batal">  
+                 <input  type="button" id="hpus12" class="btn btn-danger" value="Hapus">  
+				 <a href='<?=site_url('diagnosa/export_pdf12')?>'	target='_blank'  class="btn btn-success"id="tampil_pdf12" >
 					<i class="glyphicon glyphicon-download-alt"></i>
 					PDF
 				</a>  
-                  <a href='<?=site_url('diagnosa/excell41')?>'	target='_blank' class="btn btn-success"id="tampil_excel41" >
+                  <a href='<?=site_url('diagnosa/excell12')?>'	target='_blank' class="btn btn-success"id="tampil_excel12" >
 					<i class="glyphicon glyphicon-download-alt"></i>
 					Excel
 				</a>
-                
-                
-                         
-          </div>
-			
+            </div>
 		</div>
             <?              
 			echo form_close();
 			?>
 		
 		 <div class="row ">   
-              <div class="col-xs-12 col-sm-10 col-md-9 col-lg-9 jqGrid"  >
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 jqGrid"  >
              	
-            	  <table id="list241"  cellpadding="0" cellspacing="0"></table>
-                	<div id="pager241"></div>
+            	  <table id="list212"  cellpadding="0" cellspacing="0"></table>
+                	<div id="pager212"></div>
                
           		</div>
         </div>
 
 
     
-</div> 
-		
-		   
+		</div>                        

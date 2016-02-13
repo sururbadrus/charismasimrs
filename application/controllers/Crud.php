@@ -298,17 +298,25 @@ class Crud extends CI_Controller {
         $controller .= '
 	}
 		function index(){
-			$data_header=array();
+			$data_header=array();$data_footer=array();$data=array();
 			$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>false);
 			$data_header["edit_txt"]=true; 
 			$data_header["tampil_menu"]=$this->session->userdata(\'menu\'); 
 			$data_header["profil"] =$this->session->userdata(\'profil\'); 
-			$data_footer["jsku"]='.$this->javascript_name.'.js;';
+			$data_footer["jsku"]=\''.$this->javascript_name.'.js\';';
 			
 			foreach($this->dd as $in=>$val){
+				if($val!=''){
 	$controller .= '
-			$data["'.trim($in.$this->gen_id).'"]=$this->m_global->getcombo("'.trim($val).'","");			
-		';}
+			$data["'.trim($in.$this->gen_id).'"]=$this->m_global->getcombo("'.trim($val).'","");
+		';
+			}else{
+				$controller .= '
+			$data["'.trim($in.$this->gen_id).'"]=array(1=>\'Aktif\',0=>\'Tidak Aktif\');
+		';
+					
+				}
+		}
 			for($i=0; $i<count($this->dp); $i++){
 			$controller .= '
 			$data["'.trim($this->dp[$i].$this->gen_id).'"]=gmdate("d-m-Y",mktime(date("H")+7));	
@@ -316,10 +324,9 @@ class Crud extends CI_Controller {
 		}
 		if($this->penggunaan==1){
 			$controller .= '
-			$data["ub"]=\'\';
-			$this->load->view(\'' . $this->header . '\',$data_header);
+			$this->load->view(\'design/' . $this->header . '\',$data_header);
 			$this->load->view(\'' . $this->create_viewname . '\',$data);
-			$this->load->view(\'' . $this->footer . '\');
+			$this->load->view(\'design/' . $this->footer . '\',$data_footer);
 			';
 			}else{
 			$controller .= '
@@ -332,11 +339,11 @@ class Crud extends CI_Controller {
         $controller .= '  
 		
 		function view_grid'.$this->gen_id.'(){
-			return $this->m_diagnosa->mgrid'.$this->gen_id.'();
+			return $this->'.strtolower($this->$this->controllername).'_model->mgrid'.$this->gen_id.'();
 		}
 
 		function crud'.$this->gen_id.'() {
-			return $this->m_diagnosa->proses_simpan'.$this->gen_id.'();
+			return $this->'.strtolower($this->$this->controllername).'_model->proses_simpan'.$this->gen_id.'();
 		}
 	}';
 
@@ -374,7 +381,7 @@ function build_view_create() {
 			if($this->tipe_field_a[$i]=='dd'||$this->tipe_field_a[$i]=='chk'||$this->tipe_field_a[$i]=='ta'){
 				if($this->tipe_field_a[$i]=='dd'){// dropdwon
 					$view .= '   
-						 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+						 <div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">  
 					         <label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
                                <div class="field">
 									<?=form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control"\')?>
@@ -383,7 +390,7 @@ function build_view_create() {
 				}
 				else if($this->tipe_field_a[$i]=='chk'){ //cheked
 					$view .= '   
-						 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+						 <div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">  
 				             <label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
                                 <div class="field" style="padding-top: 2.2%;">
 				                    <input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="' . trim($this->form_tampil_a[$i].$this->gen_id) . '" type="checkbox"  class="" placeholder="' . ucfirst(trim($this->caption_field_a[$i])) . '"  />
@@ -392,7 +399,7 @@ function build_view_create() {
 							}
 							else{ //text area
 					$view .= '   
-						 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+						 <div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">  
 					         <label>' . ucfirst(trim($this->caption_field_a[$i])) . '</label>
                     	           <div class="field">
 					                   <textarea name="'.trim($this->form_tampil_a[$i].$this->gen_id). '" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"   class="validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" ></textarea>
@@ -408,7 +415,7 @@ function build_view_create() {
 					
 					 $view .= '   
 					 
-					 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+					 <div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">  
                            <label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
                                 <div class="field">
 										';
@@ -433,7 +440,7 @@ function build_view_create() {
                         
         <br/>                                    
          <div class="row">                            
-            <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                	 <input type="button" id="simpandata'.$this->gen_id.'" class="btn btn-success" value="Simpan">&nbsp;&nbsp;
                  <input  type="button"  id="batal'.$this->gen_id.'" class="btn btn-info" value="Batal">&nbsp;&nbsp;
                  <input  type="button" id="hpus'.$this->gen_id.'" class="btn btn-danger" value="Hapus">&nbsp;&nbsp;
@@ -452,7 +459,7 @@ function build_view_create() {
 			?>
 		
 		 <div class="row ">   
-              <div class="col-xs-12 col-sm-10 col-md-9 col-lg-9 jqGrid"  >
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 jqGrid"  >
              	
             	  <table id="list2'.$this->gen_id.'"  cellpadding="0" cellspacing="0"></table>
                 	<div id="pager2'.$this->gen_id.'"></div>
@@ -771,7 +778,7 @@ $model .=' $tbl.=\'</tr>\';
 	 $javascript .= ' 
 		$(document).ready(function () {
 		var mygrid'.$this->gen_id.'=jQuery("#list2'.$this->gen_id.'").jqGrid({
-					url: base_js+\"/index.php/'.trim(strtolower($this->controllername)).'/view_grid'.$this->gen_id.'", 
+					url: base_js+"/index.php/'.trim(strtolower($this->controllername)).'/view_grid'.$this->gen_id.'", 
 					datatype: "json", 
 					height: "300", 
 					//postData: { id: \'0\' },
@@ -900,7 +907,7 @@ $model .=' $tbl.=\'</tr>\';
 				}
             	if (conf) {
 				$.ajax({
-						url : base_js+\"/index.php/'.trim($this->controllername).'/crud",
+						url : base_js+"/index.php/'.trim($this->controllername).'/crud",
 						data : {
 							action : action,
 							';
@@ -969,7 +976,7 @@ $model .=' $tbl.=\'</tr>\';
 				
             	if (conf) {
 					$.ajax({
-					url : base_url()+\'/index.php/'.trim($this->controllername).'/crud,
+					url : base_url()+\'/index.php/'.trim($this->controllername).'/crud\',
 					data : {
 						action : "del",';
 						
@@ -1094,8 +1101,7 @@ $model .=' $tbl.=\'</tr>\';
 		}
 		$javascript .= '
 		})
-			 		
-			</script>
+		
 		';	
 		return $javascript;
 		} 
