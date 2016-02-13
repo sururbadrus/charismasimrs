@@ -6,6 +6,7 @@ class Crud extends CI_Controller {
     private $form_title; // form tite
     private $modelname;// model tite
 	private $listviewname;
+	private $javascript_name;
     private $create_viewname;
 	private $tselect;
 	private $a_tselect=array();
@@ -197,9 +198,10 @@ class Crud extends CI_Controller {
 			$this->controllername = str_replace(' ', '_', $cname);
             $this->fname = strtolower($this->input->post("fname"));
             $this->modelname = $this->controllername . '_model';
+			$this->javascript_name=$this->controllername.'_js';
             $this->create_viewname = 'v_' . $this->controllername;
            
-		   
+		  
 		   for($i=0; $i<count($this->tipe_field_a); $i++){
 				if($this->tipe_field_a[$i]=='dd'){
 					
@@ -219,7 +221,7 @@ class Crud extends CI_Controller {
             $this->controller_data = $controller = $this->build_controller();
             $this->create_data = $view_create = $this->build_view_create();
            	$this->model_data = $model = $this->build_model();
-            $this->js = $javascript = $this->javascript();
+            $this->js = $javascript = $this->build_javascript();
 			
 			
            // $this->header_data = $view_header = $this->build_header($fields);
@@ -235,7 +237,7 @@ class Crud extends CI_Controller {
             //name for each file
             $data['controllername'] = $this->controllername;
             $data['modelname'] = $this->modelname;
-            //$data['listviewname'] = $this->listviewname;
+            $data['javascript_name'] = $this->javascript_name;
             $data['create_viewname'] = $this->create_viewname;
            // $data['header'] = $this->header;
            // $data['footer'] = $this->footer;
@@ -287,7 +289,7 @@ class Crud extends CI_Controller {
     function build_controller() {
       $controller = '
 <?php if ( ! defined(\'BASEPATH\')) exit(\'No direct script access allowed\');
-		class ' . ucfirst($this->controllername) . ' extends CI_Controller {
+	class ' . ucfirst($this->controllername) . ' extends CI_Controller {
         public function __construct() {
                 parent::__construct();
                $this->load->model(\'' . $this->modelname . '\');
@@ -295,35 +297,37 @@ class Crud extends CI_Controller {
    		$this->gen_id=gmdate("s",mktime(date("H")+7));
         $controller .= '
 	}
-    function index(){
-		$data_header=array();
-		$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>false);
-		$data_header["edit_txt"]=true; 
-		$data_header["tampil_menu"]=$this->session->userdata(\'menu\'); 
-		$data_header["profil"] =$this->session->userdata(\'profil\'); ';
-		foreach($this->dd as $in=>$val){
-$controller .= '
-		$data["'.trim($in.$this->gen_id).'"]=$this->m_global->getcombo("'.trim($val).'","");			
-	';}
-		for($i=0; $i<count($this->dp); $i++){
-		$controller .= '
-		$data["'.trim($this->dp[$i].$this->gen_id).'"]=gmdate("d-m-Y",mktime(date("H")+7));	
+		function index(){
+			$data_header=array();
+			$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>false);
+			$data_header["edit_txt"]=true; 
+			$data_header["tampil_menu"]=$this->session->userdata(\'menu\'); 
+			$data_header["profil"] =$this->session->userdata(\'profil\'); 
+			$data_footer["jsku"]='.$this->javascript_name.'.js;';
+			
+			foreach($this->dd as $in=>$val){
+	$controller .= '
+			$data["'.trim($in.$this->gen_id).'"]=$this->m_global->getcombo("'.trim($val).'","");			
+		';}
+			for($i=0; $i<count($this->dp); $i++){
+			$controller .= '
+			$data["'.trim($this->dp[$i].$this->gen_id).'"]=gmdate("d-m-Y",mktime(date("H")+7));	
+				';
+		}
+		if($this->penggunaan==1){
+			$controller .= '
+			$data["ub"]=\'\';
+			$this->load->view(\'' . $this->header . '\',$data_header);
+			$this->load->view(\'' . $this->create_viewname . '\',$data);
+			$this->load->view(\'' . $this->footer . '\');
 			';
-	}
-	if($this->penggunaan==1){
-		$controller .= '
-		$data["ub"]=\'\';
-		$this->load->view(\'' . $this->header . '\',$data_header);
-        $this->load->view(\'' . $this->create_viewname . '\',$data);
-        $this->load->view(\'' . $this->footer . '\');
-		';
-		}else{
-		$controller .= '
-		$data["ub"]=\'\';
-		$this->load->view(\'' . $this->create_viewname . '\',$data);
-    	';}
-		$controller .= '
-    }';
+			}else{
+			$controller .= '
+			$data["ub"]=\'\';
+			$this->load->view(\'' . $this->create_viewname . '\',$data);
+			';}
+			$controller .= '
+		}';
        
         $controller .= '  
 		
@@ -334,7 +338,7 @@ $controller .= '
 		function crud'.$this->gen_id.'() {
 			return $this->m_diagnosa->proses_simpan'.$this->gen_id.'();
 		}
-		}';
+	}';
 
         return $controller;
     }
@@ -345,20 +349,7 @@ $controller .= '
 function build_view_create() {
 
    		$view='';
-		$hdg='';
-		for($i=0; $i<count($this->a_jqgrid); $i++){
-					if((count($this->a_jqgrid)-1)>$i){
-						$hdg .='\''.trim($this->a_jqgrid[$i]).'\',';
-					}
-					else{
-						
-						$hdg .='\''.trim($this->a_jqgrid[$i]).'\'';
-						}
-					}
-		
-		
-		
-        $view .= '
+		$view .= '
 
 <div class="row">
             <div class="row">
@@ -423,11 +414,11 @@ function build_view_create() {
 										';
 					if($this->tipe_field_a[$i]=='dp'){
 					$view .= ' 										
-        	                         <input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class="xxwide text input validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="<?=$'.trim($this->form_tampil_a[$i].$this->gen_id).'?>" />
+        	                         <input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="<?=$'.trim($this->form_tampil_a[$i].$this->gen_id).'?>" />
 										';
 										}else{
 									$view .= ' 										
-                                        <input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class="xxwide text input validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="" />
+                                        <input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="" />
 										';
 											}
 										$view .= ' 
@@ -481,11 +472,11 @@ function build_view_create() {
  function build_model() {
 	$model='';
   $model = '
-  <?php if (!defined(\'BASEPATH\')) exit(\'No direct script access allowed\');
-class ' . trim(ucfirst($this->modelname)) . ' extends CI_Model { 
-	function __construct() {
-        parent::__construct();
-    }';
+<?php if (!defined(\'BASEPATH\')) exit(\'No direct script access allowed\');
+	class ' . trim(ucfirst($this->modelname)) . ' extends CI_Model { 
+		function __construct() {
+			parent::__construct();
+		}';
  $model .= '  
 		function mgrid'.$this->gen_id.'(){
 			$page  = $this->input->post("page");
@@ -496,153 +487,154 @@ class ' . trim(ucfirst($this->modelname)) . ' extends CI_Model {
 			$wh = "";
 			$searchOn = $_REQUEST["_search"];
 			if($searchOn=="true") {
-			$filters = $_REQUEST["filters"];
-	    	$obj = json_decode($filters,true);
-	    	$arr=$obj["rules"];
-	    	foreach( $arr as $field=>$data) {
-				switch($data["field"]){
-	   				';
-					$loopfield='';
-					for($i=0; $i<count($this->a_tselect); $i++){
-					$loopfield .= ' 
-					case "'.trim($this->a_tselect[$i]).'":
-						$wh .= " and '.trim($this->a_tselect[$i]).' like \'%".$data["data"]."%\'";
-						break;';
+				$filters = $_REQUEST["filters"];
+				$obj = json_decode($filters,true);
+				$arr=$obj["rules"];
+				foreach( $arr as $field=>$data) {
+					switch($data["field"]){
+						';
+						$loopfield='';
+						for($i=0; $i<count($this->a_tselect); $i++){
+						$loopfield .= ' 
+						case "'.trim($this->a_tselect[$i]).'":
+							$wh .= " and LOWER('.trim($this->a_tselect[$i]).') like \'%".strtolower($data["data"])."%\'";
+							break;';
+						}
+						$model .=$loopfield ;
+						$model .= ' 
+						default:
+							$wh .= " and " .LOWER($data["field"])." like \'".strtolower($data["data"])."%\'";
+						break;
 					}
-					$model .=$loopfield ;
-					$model .= ' 
-					default:
-						$wh .= " and " .$data["field"]." like \'".$data["data"]."%\'";
-					break;
 				}
-	    	}
-		} 
+			} 
 		';
-		$sql='
-		$sql="'.$this->full_q. '  where 0=0 $wh";';
-		$model .= $sql; 
-		 $model .= ' 
-		$count = $this->m_global->total_row($sql);
-		$count > 0 ? $total_pages = ceil($count/$limit) : $total_pages = 0;
-		if ($page > $total_pages) $page=$total_pages;
-		$start = $limit*$page - $limit;
-		if($start <0) $start = 0;
-		$sql=$sql. " order by ". $sidx ." ".  $sord ." offset ". $start ." limit ". $limit;
-		$data1 = $this->m_global->grid_view($sql)->result_array();
-		$responce = new StdClass;
-		$responce->page = $page;
-		$responce->total = $total_pages;
-		$responce->records = $count;
-		$i=0;
-		$no=1;';
-		$loopfield_='';
-		$jml_count_fh=count($this->a_hselect)-1;
-			for($i=0; $i<count($this->a_hselect); $i++){
-					if($jml_count_fh>$i){
-						$loopfield_ .='$line[\''.trim($this->a_hselect[$i]).'\'],';
-					}
-					else{
-						$loopfield_ .='$line[\''.trim($this->a_hselect[$i]).'\']';
+			$sql='
+			$sql="'.$this->full_q. '  where 0=0 $wh";';
+			$model .= $sql; 
+			 $model .= ' 
+			$count = $this->m_global->total_row($sql);
+			$count > 0 ? $total_pages = ceil($count/$limit) : $total_pages = 0;
+			if ($page > $total_pages) $page=$total_pages;
+			$start = $limit*$page - $limit;
+			if($start <0) $start = 0;
+			$sql=$sql. " order by ". $sidx ." ".  $sord ." offset ". $start ." limit ". $limit;
+			$data1 = $this->m_global->grid_view($sql)->result_array();
+			$responce = new StdClass;
+			$responce->page = $page;
+			$responce->total = $total_pages;
+			$responce->records = $count;
+			$i=0;
+			$no=1;';
+			$loopfield_='';
+			$jml_count_fh=count($this->a_hselect)-1;
+				for($i=0; $i<count($this->a_hselect); $i++){
+						if($jml_count_fh>$i){
+							$loopfield_ .='$line[\''.trim($this->a_hselect[$i]).'\'],';
 						}
-					}
-		$loopfield_s='';		
-		$jml_count_fs=count($this->a_tselect)-1;
-			for($i=0; $i<count($this->a_tselect); $i++){
-					if($jml_count_fs>$i){
-						$loopfield_s .='$line[\''.trim($this->a_tselect[$i]).'\'],';
-					}
-					else{
-						$loopfield_s .='$line[\''.trim($this->a_tselect[$i]).'\']';
+						else{
+							$loopfield_ .='$line[\''.trim($this->a_hselect[$i]).'\']';
+							}
 						}
-					}
-					
-		$model .= '
-		foreach($data1 as $line){
-			$responce->rows[$i][\'id\']=array('.trim($loopfield_).');
-	    	$responce->rows[$i][\'cell\']=array('.trim($loopfield_s).'); 
-			$i++;
-			$no++;
-		}
-		echo json_encode($responce);
-		}';
-		$model .= ' 
+			$loopfield_s='';		
+			$jml_count_fs=count($this->a_tselect)-1;
+				for($i=0; $i<count($this->a_tselect); $i++){
+						if($jml_count_fs>$i){
+							$loopfield_s .='$line[\''.trim($this->a_tselect[$i]).'\'],';
+						}
+						else{
+							$loopfield_s .='$line[\''.trim($this->a_tselect[$i]).'\']';
+							}
+						}
+						
+			$model .= '
+			foreach($data1 as $line){
+				$responce->rows[$i][\'id\']=array('.trim($loopfield_).');
+				$responce->rows[$i][\'cell\']=array('.trim($loopfield_s).'); 
+				$i++;
+				$no++;
+			}
+			echo json_encode($responce);
+			}';
+			$model .= ' 
+			
 		function proses_simpan'.$this->gen_id.'() {
 			';
 		$model .= '
-	    $data_post=$this->security->xss_clean($_POST);
-	    switch (element("action", $data_post)) {
-		    case \'Simpan\':
-			';
-			for($i=0; $i<count($this->tbl_insert); $i++){
-			$arr_insr_=array();
-			$arr_insr = explode(',',strtolower($this->field_insert[$i]));
-			for($iub=0; $iub<count($arr_insr); $iub++){
-				$model .= '
-				$arr_insr_[\''.trim($arr_insr[$iub]).'\']=element(\''.trim($arr_insr[$iub]).'\', $data_post);
+			$data_post=$this->security->xss_clean($_POST);
+			switch (element("action", $data_post)) {
+				case \'Simpan\':
 				';
-			}
-		$model .= '
-		 $sql_q['.$i.']= $this->db->insert_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_); 
-				 ';}
-		$model .= '
-		$this->db->trans_begin();
-		for($iub=0; $iub<count($sql_q); $iub++){
-			$this->db->query($sql_q[$iub]);
-		}
-			if ($this->db->trans_status() === FALSE)
-				{
-						$this->db->trans_rollback();
-						echo json_encode(array(\'ket\'=>"Gagal Insert")) ;
+				for($i=0; $i<count($this->tbl_insert); $i++){
+				$arr_insr_=array();
+				$arr_insr = explode(',',strtolower($this->field_insert[$i]));
+				for($iub=0; $iub<count($arr_insr); $iub++){
+					$model .= '
+					$arr_insr_[\''.trim($arr_insr[$iub]).'\']=element(\''.trim($arr_insr[$iub]).'\', $data_post);
+					';
 				}
-				else
-				{
-						$this->db->trans_commit();
-						echo json_encode(array(\'ket\'=>"Penambahan Data Berhasil")) ;
-				}
-				break;
-	        case \'Ubah\':
-				';
-				for($i=0; $i<count($this->tbl_update); $i++){
-			$arr_insr_=array();
-			$arr_insr = explode(',',strtolower($this->field_update[$i]));
-			for($iub=0; $iub<count($arr_insr); $iub++){
-			$model .= '$arr_insr_[\''.trim($arr_insr[$iub]).'\']=element(\''.trim($arr_insr[$iub]).'\', $data_post);
-			';
-			}
 			$model .= '
-			$where['.$i.'] = \''.$this->id_update[$i].' =\'. element(\''.$this->id_update[$i].'\', $data_post);
-			$sql_q['.$i.']=  $this->db->update_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_,$where['.$i.']); 
-				 ';
-			
-			}
-		$model .= '
+			 $sql_q['.$i.']= $this->db->insert_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_); 
+					 ';}
+			$model .= '
 			$this->db->trans_begin();
-				for($iub=0; $iub<count($sql_q); $iub++){
-					$this->db->query($sql_q[$iub]);
-				}
-			if ($this->db->trans_status() === FALSE)
-				{
-					$this->db->trans_rollback();
-					echo json_encode(array(\'ket\'=>"Gagal Update")) ;
-				}
-				else
-				{
-					$this->db->trans_commit();
-					echo json_encode(array(\'ket\'=>"Update Data Berhasil")) ;
-				}
-			     break;
-	        case \'del\':
-			';
-			for($i=0; $i<count($this->tbl_delete); $i++){
-				$model .= '
-				$this->db->where(\''.trim($this->id_delete[$i]).'\', element(\''.trim($this->id_delete[$i]).'\', $data_post));
-				$this->db->delete(\''.trim($this->tbl_delete[$i]).'\');
-				 ';
+			for($iub=0; $iub<count($sql_q); $iub++){
+				$this->db->query($sql_q[$iub]);
 			}
-			 $model .= '
-			echo json_encode(array(\'ket\'=>"Hapus Data Berhasil")) ;
-	        break;
-		}
+				if ($this->db->trans_status() === FALSE)
+					{
+							$this->db->trans_rollback();
+							echo json_encode(array(\'ket\'=>"Gagal Insert")) ;
+					}
+					else
+					{
+							$this->db->trans_commit();
+							echo json_encode(array(\'ket\'=>"Penambahan Data Berhasil")) ;
+					}
+					break;
+				case \'Ubah\':
+					';
+					for($i=0; $i<count($this->tbl_update); $i++){
+				$arr_insr_=array();
+				$arr_insr = explode(',',strtolower($this->field_update[$i]));
+				for($iub=0; $iub<count($arr_insr); $iub++){
+				$model .= '$arr_insr_[\''.trim($arr_insr[$iub]).'\']=element(\''.trim($arr_insr[$iub]).'\', $data_post);
+				';
+				}
+				$model .= '
+				$where['.$i.'] = \''.$this->id_update[$i].' =\'. element(\''.$this->id_update[$i].'\', $data_post);
+				$sql_q['.$i.']=  $this->db->update_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_,$where['.$i.']); 
+					 ';
+				
+				}
+			$model .= '
+				$this->db->trans_begin();
+					for($iub=0; $iub<count($sql_q); $iub++){
+						$this->db->query($sql_q[$iub]);
+					}
+				if ($this->db->trans_status() === FALSE)
+					{
+						$this->db->trans_rollback();
+						echo json_encode(array(\'ket\'=>"Gagal Update")) ;
+					}
+					else
+					{
+						$this->db->trans_commit();
+						echo json_encode(array(\'ket\'=>"Update Data Berhasil")) ;
+					}
+					 break;
+				case \'del\':
+				';
+				for($i=0; $i<count($this->tbl_delete); $i++){
+					$model .= '
+					$this->db->where(\''.trim($this->id_delete[$i]).'\', element(\''.trim($this->id_delete[$i]).'\', $data_post));
+					$this->db->delete(\''.trim($this->tbl_delete[$i]).'\');
+					 ';
+				}
+				 $model .= '
+				echo json_encode(array(\'ket\'=>"Hapus Data Berhasil")) ;
+				break;
+			}
 	}';
 	
 		
@@ -764,12 +756,22 @@ $model .=' $tbl.=\'</tr>\';
         return $model;
     }
 
-	function create_javascript(){
+	function build_javascript(){
 	$javascript='';
+	$hdg='';
+		for($i=0; $i<count($this->a_jqgrid); $i++){
+					if((count($this->a_jqgrid)-1)>$i){
+						$hdg .='\''.trim($this->a_jqgrid[$i]).'\',';
+					}
+					else{
+						
+						$hdg .='\''.trim($this->a_jqgrid[$i]).'\'';
+						}
+					}
 	 $javascript .= ' 
 		$(document).ready(function () {
 		var mygrid'.$this->gen_id.'=jQuery("#list2'.$this->gen_id.'").jqGrid({
-					url: base_js+\'/index.php/'.trim(strtolower($this->controllername)).'/view_grid'.$this->gen_id.'", 
+					url: base_js+\"/index.php/'.trim(strtolower($this->controllername)).'/view_grid'.$this->gen_id.'", 
 					datatype: "json", 
 					height: "300", 
 					//postData: { id: \'0\' },
@@ -820,21 +822,21 @@ $model .=' $tbl.=\'</tr>\';
 				$hsl__='';
 					for($i=0; $i<count($this->join_field_form); $i++){
 						$hsl__=element($this->join_field_form[$i], $this->arr_aso_tselect);
-						if(is_null($hsl__)){
-							$hsl__=element(trim($this->join_field_form[$i]), $this->arr_aso_hselect);
-							if(is_null($hsl__)){
-							$javascript .= '
-							$("#'.trim($this->join_field_form[$i].$this->gen_id).'").val(data_'.$this->gen_id.'[0]);
-						';	
-						}else{
-							for($iu=0; $iu<count($this->a_hselect); $iu++){
-								if(trim($this->a_hselect[$iu])==trim($hsl__)){
-									$javascript .= '
-										$("#'.trim($hsl__.$this->gen_id).'").val(data_'.$this->gen_id.'['.$iu.']);			
-						';
-								}
-							}
-						}
+					  if(is_null($hsl__)){
+						  $hsl__=element(trim($this->join_field_form[$i]), $this->arr_aso_hselect);
+						  if(is_null($hsl__)){
+							  $javascript .= '
+							  $("#'.trim($this->join_field_form[$i].$this->gen_id).'").val(data_'.$this->gen_id.'[0]);
+							  ';	
+						  }else{
+							  for($iu=0; $iu<count($this->a_hselect); $iu++){
+								  if(trim($this->a_hselect[$iu])==trim($hsl__)){
+									  $javascript .= '
+										  $("#'.trim($hsl__.$this->gen_id).'").val(data_'.$this->gen_id.'['.$iu.']);			
+						  ';
+								  }
+							  }
+						  }
 					}else{
 						if($this->tipe_field_a[$i]=='chk'){
 								$javascript .= '
@@ -865,7 +867,7 @@ $model .=' $tbl.=\'</tr>\';
 	
 		}';
 		
-		$$javascript .= '
+		$javascript .= '
 			$("#simpandata'.$this->gen_id.'").click(function(){
 			var action=$(\'#simpandata'.$this->gen_id.'\').val();
 			;
@@ -893,24 +895,24 @@ $model .=' $tbl.=\'</tr>\';
 					}
 					';
 				}
-				$$javascript .= '
+				$javascript .= '
 					var conf = confirm("Yakin Akan Mengubah Data Ini?");
 				}
             	if (conf) {
 				$.ajax({
-						url : base_js+\'/index.php/'.trim($this->controllername).'/crud",
+						url : base_js+\"/index.php/'.trim($this->controllername).'/crud",
 						data : {
 							action : action,
 							';
 							for($i=0; $i<count($this->form_tampil_a); $i++){
 								if($this->tipe_field_a[$i]=='chk'){
 								
-						$$javascript .= '
+						$javascript .= '
 						'.trim($this->form_tampil_a[$i]).' : ($(\'#'.trim($this->form_tampil_a[$i].$this->gen_id).'\').is(":checked"))?\'1\':\'0\',
 							';
 								}else{
 							
-						$$javascript .= '
+						$javascript .= '
 							'.trim($this->form_tampil_a[$i]).' : $(\'#'.trim($this->form_tampil_a[$i].$this->gen_id).'\').val(),
 							';
 							
@@ -918,11 +920,11 @@ $model .=' $tbl.=\'</tr>\';
 						
 						}
 						for($i=0; $i<count($this->form_hiden_a); $i++){
-						$$javascript .= '
+						$javascript .= '
 							'.trim($this->form_hiden_a[$i]).' : $(\'#'.trim($this->form_hiden_a[$i].$this->gen_id).'\').val(),';
 						
 						}
-			$$javascript .= '
+			$javascript .= '
 						},
 						type : \'POST\',
 						dataType :\'JSON\',
@@ -950,7 +952,7 @@ $model .=' $tbl.=\'</tr>\';
 			
 			';
 			for($i=0; $i<count($this->form_hiden_a); $i++){
-						$$javascript .= '
+						$javascript .= '
 							
 							if($(\'#'.trim($this->form_hiden_a[$i].$this->gen_id).'\').val()==\'\') {
 								alert(\'Pilih Data Yang Akan Di Hapus\'); 
@@ -961,7 +963,7 @@ $model .=' $tbl.=\'</tr>\';
 						
 						}
 						
-					$$javascript .= '
+					$javascript .= '
 					
 				var conf = confirm("Yakin Akan Menghapus Data Ini?");
 				
@@ -972,12 +974,12 @@ $model .=' $tbl.=\'</tr>\';
 						action : "del",';
 						
 						for($i=0; $i<count($this->form_hiden_a); $i++){
-						$$javascript .= '
+						$javascript .= '
 							'.trim($this->form_hiden_a[$i]).' : $(\'#'.trim($this->form_hiden_a[$i].$this->gen_id).'\').val(),';
 						
 						}
 												   
-		$$javascript .= '
+		$javascript .= '
 					},
 					type : \'POST\',
 					dataType :\'JSON\',
@@ -1007,7 +1009,7 @@ $model .=' $tbl.=\'</tr>\';
 			';
 			
 			for($i=0; $i<count($this->form_hiden_a); $i++){
-						$$javascript .= '
+						$javascript .= '
 						
 						$(\'#'.trim($this->form_hiden_a[$i].$this->gen_id).'\').val(\'\');';
 							
@@ -1017,16 +1019,16 @@ $model .=' $tbl.=\'</tr>\';
 			for($i=0; $i<count($this->form_tampil_a); $i++){
 						
 						if($this->tipe_field_a[$i]=='chk'){
-						$$javascript .= '
+						$javascript .= '
 							$("#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop("checked", false);
 						';
 						}else if($this->tipe_field_a[$i]=='dd'){
-						$$javascript .= '
+						$javascript .= '
 							
 							$("select#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop(\'selectedIndex\', 0);
 						';
 						}else{
-						$$javascript .= '
+						$javascript .= '
 							$(\'#'.trim($this->form_tampil_a[$i].$this->gen_id).'\').val(\'\');
 						';	
 							
@@ -1037,13 +1039,13 @@ $model .=' $tbl.=\'</tr>\';
 						}
 			
 			
-			$$javascript .= '
+			$javascript .= '
 			})
 			';
 			
 			for($i=0; $i<count($this->dp); $i++){
 			
-				$$javascript .= '
+				$javascript .= '
 							$( "#'.trim($this->dp[$i].$this->gen_id).'" ).datepicker({
 							dateFormat : \'dd-mm-yy\',
 							onClose: function (){
@@ -1057,14 +1059,14 @@ $model .=' $tbl.=\'</tr>\';
 			
 			foreach($this->ac as $inx=>$val){
 			
-			$$javascript .= ' 
+			$javascript .= ' 
 			
 			$(\'#'.$inx.$this->gen_id.').autocomplete({
 				minLength : 1,
 				source: function(request, response) {
 					$.ajax({
 						type : \'POST\',
-						url: base_js+\''.$this->controllername.'/'.$inx.',
+						url: base_js+\'/index.php/'.$this->controllername.'/'.$inx.',
 						dataType: "json",
 						data: {						
 								\''.$inx.'\' : $("#'.trim($inx.$this->gen_id).'").val()
@@ -1090,7 +1092,7 @@ $model .=' $tbl.=\'</tr>\';
 		$ubi++;
 		
 		}
-		$$javascript .= '
+		$javascript .= '
 		})
 			 		
 			</script>

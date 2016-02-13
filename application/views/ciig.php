@@ -190,11 +190,11 @@ if (isset($view_create)) {
                         <?php } ?>
 
                     <?php
-                    if (isset($view_list)) {
+                    if (isset($javascript)) {
                         ?>
-                        <h3>List Form</h3>  <h4><?php echo $listviewname . '.php'; ?></h4>
+                        <h3>Javas Cript</h3>  <h4><?php echo $javascript_name . '.php'; ?></h4>
                         <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
-                        <?php echo $view_list; ?>
+                        <?php echo $javascript; ?>
                         </textarea> 
 <?php } ?>
 
