@@ -25,13 +25,13 @@
                         <label>Full Query Grid</label>  <textarea id="full_q"  name="full_q"  class="form-control validate[required]" rows="5" cols="50"  placeholder="Full Query"  ><?php echo set_value('full_q');  ?></textarea>
                     </div>
                     
-                    <div id="body"  class="col-lg-3">
+                    <div id="body"  class="col-lg-7">
                         <label>Caption Jgqrid</label>  <input type="text"  name="jdl_jqgrid" id="jdl_jqgrid"  class="form-control validate[required]" value="<?php echo set_value('jdl_jqgrid');  ?>"   placeholder="Judul Jqgrid"  >
                     </div>
                      <div id="body"  class="col-lg-3">
                         <label>Order By (Nama Field)</label>  <input type="text"  name="orderby" id="orderby"  class="form-control validate[required]" value="<?php echo set_value('orderby');  ?>"   placeholder="Pengurutan"  >
                     </div>
-                    <div id="body"  class="col-lg-3">
+                    <div id="body"  class="col-lg-2">
                         <label>Desc/Asc</label>  <select id="desc_asc" name="desc_asc"  class="form-control validate[required]"    >
                         <option  value="asc">Asc</option> 
                         <option  value="desc">Desc</option>
@@ -44,21 +44,21 @@
                     </div>
                     
                     <div class="row">
-					<div id="body"  class="col-lg-6">
-                        <label>Field Tampil (Use Koma Sebagai Pemisah)</label>  <input value="<?php echo set_value('tselect');  ?>" type="text"  name="tselect" id="tselect"  class="form-control validate[required]"   placeholder="Field Tampil"  >
+					<div id="body"  class="col-lg-12">
+                        <label>Field Tampil (Use Koma Sebagai Pemisah)</label>  <textarea    name="tselect" id="tselect"  class="form-control validate[required]"   placeholder="Field Tampil"  ><?php echo set_value('tselect');  ?></textarea>
                     </div>
-					<div id="body"  class="col-lg-6">
-                        <label>Field Hiden (Use Koma Sebagai Pemisah)</label>  <input value="<?php echo set_value('hselect'); ?>" type="text" id="hselect"  name="hselect"  class="form-control validate[required]"   placeholder="Field Tampil"  >
+					<div id="body"  class="col-lg-12">
+                        <label>Field Hiden (Use Koma Sebagai Pemisah)</label>  <textarea  id="hselect"  name="hselect"  class="form-control validate[required]"   placeholder="Field Tampil"  ><?php echo set_value('hselect'); ?></textarea>
                     </div>
                     </div>
 					
                     
                     
                      <div class="row">
-					<div id="body"  class="col-lg-6">
+					<div id="body"  class="col-lg-12">
                         <label>Header Grid (Use Koma Sebagai Pemisah)</label>  <textarea id="jqgrid" name="jqgrid"  class="form-control validate[required]"   placeholder="Header Grid"  ><?php echo set_value('jqgrid');  ?></textarea >
                     </div>
-					<div id="body"  class="col-lg-6">
+					<div id="body"  class="col-lg-12">
                         <label>Ukuran Grid (Use Koma Sebagai Pemisah)</label>  <textarea  id="ugrid" name="ugrid"  class="form-control validate[required]"   placeholder="Ukuran Grid"><?php echo set_value('ugrid');?></textarea>
                     </div>
                     
@@ -67,13 +67,13 @@
                     
                      <h4 class="form-signin-heading" ><u>FORM</u></h4>
                     <div class="row">
-                    <div id="body"  class="col-lg-3">
+                    <div id="body"  class="col-lg-12">
                             <label>Form title</label>  <input type="text" name="fname" id="fname"  class="form-control validate[required]"   placeholder="Form title" value="<?php echo set_value('fname'); ?>" >
                         </div>
-                        <div id="body"  class="col-lg-6">
-                            <label>Field Tampil (Use Koma Sebagai Pemisah)</label>  <input type="text"  name="form_tampil" id="form_tampil"  class="form-control validate[required]" value="<?php echo set_value('form_tampil');  ?>"   placeholder="Form Tampil"  >
+                        <div id="body"  class="col-lg-12">
+                            <label>Field Tampil (Use Koma Sebagai Pemisah)</label>  <textarea  name="form_tampil" id="form_tampil"  class="form-control validate[required]"    placeholder="Form Tampil"  ><?php echo set_value('form_tampil');  ?></textarea>
                         </div>
-                         <div id="body"  class="col-lg-3">
+                         <div id="body"  class="col-lg-12">
                             <label>Field Hiden( Use Koma )</label>  <input type="text"  name="form_hiden"  id="form_hiden" class="form-control validate[required]" value="<?php echo set_value('form_hiden');  ?>"   placeholder="Form Hiden"  >
                         </div>
                         
@@ -99,43 +99,43 @@
                     
                     </div>
                     
-                     <h4 class="form-signin-heading" ><u>CRUD</u></h4>
+                     <h4 class="form-signin-heading" ><u>PROSES INSERT</u></h4>
                     <div class="row">
-                        <div id="body"  class="col-lg-6">
+                        <div id="body"  class="col-lg-12">
                             <label>Tabel Insert Gunakan Tanda Koma Sebagai Pemisah</label>  <input type="text"  name="tbl_insert" id="tbl_insert"  class="form-control validate[required]" value="<?php echo set_value('tbl_insert');  ?>"   placeholder="Tabel Insert"  >
                         </div>
                          <div id="body"  class="col-lg-6">
-                            <label>Field Insert Gunakan * Sebagai Pemisah</label>  <input type="text"  name="field_insert"  id="field_insert" class="form-control validate[required]" value="<?php echo set_value('field_insert');  ?>"   placeholder="Field Insert"  >
+                            <label>Field Insert Gunakan * Sebagai Pemisah</label>  <textarea   name="field_insert"  id="field_insert" class="form-control validate[required]"    placeholder="Field Insert"  ><?php echo set_value('field_insert');  ?></textarea>
                         </div>
                         
                     
                     </div>
                     
                     
-                   
+                   <h4 class="form-signin-heading" ><u>PROSES UPDATE</u></h4>
                     <div class="row">
-                        <div id="body"  class="col-lg-4">
+                        <div id="body"  class="col-lg-12">
                             <label>Tabel Update  Gunakan Tanda Koma Sebagai Pemisah</label>  <input type="text"  name="tbl_update" id="tbl_update"  class="form-control validate[required]" value="<?php echo set_value('tbl_update');  ?>"   placeholder="Tabel Update"  >
                         </div>
-                         <div id="body"  class="col-lg-4">
-                            <label>Field Update Gunakan * Sebagai Pemisah</label>  <input type="text"  name="field_update" id="field_update"  class="form-control validate[required]" value="<?php echo set_value('field_update');  ?>"   placeholder="Field Update"  >
+                         <div id="body"  class="col-lg-12">
+                            <label>Field Update Gunakan * Sebagai Pemisah</label>  <textarea   name="field_update" id="field_update"  class="form-control validate[required]"   placeholder="Field Update"  ><?php echo set_value('field_update');  ?></textarea>
                         </div>
                         
-                         <div id="body"  class="col-lg-4">
+                         <div id="body"  class="col-lg-12">
                             <label>ID Update</label>  <input type="text"  name="id_update" id="id_update"  class="form-control validate[required]" value="<?php echo set_value('id_update');  ?>"   placeholder="ID Update"  >
                         </div>
                         
                     
                     </div>
                     
-                    
+                    <h4 class="form-signin-heading" ><u>PROSES DELETE</u></h4>
                     <div class="row">
-                        <div id="body"  class="col-lg-6">
+                        <div id="body"  class="col-lg-12">
                             <label>Tabel Delete  Gunakan Tanda Koma Sebagai Pemisah</label>  <input type="text"  name="tbl_delete" id="tbl_delete"  class="form-control" value="<?php echo set_value('tbl_delete');  ?>"   placeholder="Tabel Delete"  >
                         </div>
                          
                         
-                         <div id="body"  class="col-lg-6">
+                         <div id="body"  class="col-lg-12">
                             <label>ID Delete</label>  <input type="text"  name="id_delete" id="id_delete"  class="form-control" value="<?php echo set_value('id_delete');  ?>"   placeholder="ID Delete"  >
                         </div>
                         
@@ -185,7 +185,7 @@ if (isset($view_create)) {
     ?>
                         <h3>Create Form</h3> <h4><?php echo $create_viewname . '.php'; ?></h4>
                         <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
-                        <?php echo $view_create; ?>
+                        <?php echo htmlentities($view_create); ?>
                         </textarea> 
                         <?php } ?>
 

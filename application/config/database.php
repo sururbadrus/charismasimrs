@@ -64,11 +64,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'postgres',
+	'hostname' => 'postgres',
+	'username' => 'root',
 	'password' => 'a',
-	'database' => 'db_simrs_pg',
-	'dbdriver' => 'postgre',
+	'database' => 'sim_rs_pg',
+	'dbdriver' => 'postgres',
 	'dbprefix' => '',
 	'pconnect' => TRUE,
 	'db_debug' => TRUE,

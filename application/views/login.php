@@ -70,7 +70,7 @@
     <script src="<?php echo base_url('assets/plugins/js/jquery.raty.min.js');?>"></script>
     <!-- for iOS style toggle switch -->
     <script src="<?php echo base_url('assets/plugins/js/jquery.iphone.toggle.js');?>"></script>
-     <script src="<?php echo base_url('assets/plugins/pub/js/jquery.form.js');?>"></script>
+     <script src="<?php echo base_url('assets/plugins/js/sb-admin.js');?>"></script>
     
     <!-- autogrowing textarea plugin -->
     <!--script src="<?php // echo base_url('assets/plugins/js/jquery.autogrow-textarea.js');?>"></script-->
@@ -146,88 +146,9 @@
     </div>
 </div>
 
-<div id="curtain" style="display: none; position: fixed; width: 100%; height: 100%; background-color: rgba(255,255,255,.5); z-index: 9999">
-    <div class="spinner">
-        <div class="sk-dot1"></div><div class="sk-dot2"></div>
-        <div class="rect3"></div><div class="rect4"></div>
-        <div class="rect5"></div>
-    </div>
-</div>
+
     <!-- topbar starts -->
-    <div class="navbar navbar-default" role="navigation">
-
-        <div class="navbar-inner">
-            <button type="button" class="navbar-toggle pull-left animated flip">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="<?php echo base_url();?>"> <?php echo assets_img('img/logo20.png',array('class'=>'hidden-xs'));?> 
-                <span><strong>SIMRS</strong></span></a>
-
-            <!-- user dropdown starts -->
-            
-            <div class="btn-group pull-right animated tada">
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <i class="glyphicon glyphicon-user red"></i><span class="hidden-sm hidden-xs"> <?php echo  $this->session->userdata('namapengguna');?></span>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                   
-                    <li><a href="<?php echo base_url('login/logout'); ?>">Logout</a></li>
-                </ul>
-            </div>
-            <!-- user dropdown ends -->
-
-            <!-- theme selector starts -->
-           
-            <!-- theme selector ends -->
-
-            <ul class="collapse navbar-collapse nav navbar-nav top-menu">
-                <li><a href="<?php base_url('crud')?>"><i class="glyphicon glyphicon-home"></i><strong> CRUD</strong></a></li>
-                <!--li class="dropdown">
-                    <a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-book"></i> <strong>Master Data </strong><span
-                            class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="<?php echo base_url('kategori');?>">Kategori</a></li>
-                        <li><a href="<?php echo base_url('seksi');?>">Seksi</a></li>
-                        <li><a href="<?php echo base_url('curr');?>">Currency</a></li>
-                        <li class="divider"></li>
-                        
-                        <li><a href="<?php echo base_url('kota');?>">Kabupaten Kota</a></li>
-                        
-                    </ul>
-                </li>
-                 <li class="dropdown">
-                    <a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-th-list"></i> <strong>Data Transaksi </strong><span
-                            class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Perusahaan</a></li>
-                        <li><a href="#">Kode KBLH Perusahanan</a></li>
-                        <li><a href="#">Produk Komoditi</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Penjualan Komoditi</a></li>
-                        
-                    </ul>
-                </li>
-                 <li class="dropdown">
-                    <a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-check"></i><strong> Data Laporan </strong><span
-                            class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Perusahaan</a></li>
-                        <li><a href="#">Kode KBLH Perusahanan</a></li>
-                        <li><a href="#">Kategori Perusahaan</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Penjualan Komoditi</a></li>
-                        
-                    </ul>
-                </li-->
-                
-            </ul>
-
-        </div>
-    </div>
+    
     <!-- topbar ends -->
 
 <div class="ch-container">
@@ -249,3 +170,70 @@
 
 
 		
+   <div class="row">
+        <div class="col-md-12 center login-header">
+            <h2>APLIKASI SIMRS</h2>
+        </div>
+        <!--/span-->
+    </div><!--/row-->
+
+    <div class="row">
+        <div class="well col-md-5 center login-box">
+            <div class="alert alert-info">
+                Masukkan Email Dan Password
+            </div>
+            <form class="form-horizontal" action="<?php echo base_url('login/validate');?>" method="post">
+                <fieldset>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope red"></i></span>
+                        <input type="email" name="usermail" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="clearfix"></div><br>
+
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock red"></i></span>
+                        <input type="password" name="userpass" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="input-prepend">
+                        <label class="remember" for="remember"><input type="checkbox" id="remember"> Remember me</label>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <p class="center col-md-5">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+        <!--/span-->
+    </div><!--/row-->
+
+
+
+</div>
+<div class="col-md-1 com-lg-1 col-sm-1">
+</div>
+    </div>
+    
+    
+   
+
+
+</div><!--/.fluid-container-->
+
+    
+  
+    <script>
+	base_js="<?php echo base_url(); ?>";
+	
+		$(window).load(function() {	
+         $('#preloader').fadeOut('slow', function(){
+			  $(this).remove();
+		 }); 
+    });	
+	</script>
+    <script src="<?php echo base_url('assets/plugins/js/charisma.js');?>"></script>
+</body>
+</html>

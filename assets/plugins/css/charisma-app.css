@@ -6,6 +6,7 @@ select {
 
 .ch-container {
     padding: 0 15px;
+	min-height:900px;
 }
 
 .top-block {

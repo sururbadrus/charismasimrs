@@ -27,13 +27,13 @@ class App_auth{
          $router =& load_class('Router', 'core');
          $controller = $router->fetch_class();
 		 
-		 if($controller!='access'){
+		 if($controller!='login'){
 			
 			if(!$this->CI->session->userdata('logged_in')){
 				if($this->CI->input->is_ajax_request()){
 					echo 'session expired';
 				}else{
-					redirect(base_url('access'));
+					redirect(base_url('login'));
 				}
 			}  
 		
