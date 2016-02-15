@@ -142,18 +142,18 @@ class Crud extends CI_Controller {
 			$this->penggunaan=$this->input->post("penggunaan");
 			$this->full_q = strtolower($this->input->post("full_q"));
            	$this->tselect = strtolower(trim($this->input->post("tselect")));
-			$this->a_tselect = explode(',',$this->tselect);
+			$this->a_tselect = explode('#',$this->tselect);
 			$this->hselect = strtolower(trim($this->input->post("hselect")));
-			$this->a_hselect = explode(',',$this->hselect);
+			$this->a_hselect = explode('#',$this->hselect);
 			$this->jqgrid = strtolower(trim($this->input->post("jqgrid")));
-			$this->a_jqgrid = explode(',',$this->jqgrid);
+			$this->a_jqgrid = explode('#',$this->jqgrid);
 			$this->ugrid = trim($this->input->post("ugrid"));
-			$this->a_ugrid = explode(',',$this->ugrid);
+			$this->a_ugrid = explode('#',$this->ugrid);
 			$this->jdl_jqgrid = trim($this->input->post("jdl_jqgrid"));
 			$this->desc_asc = strtolower(trim($this->input->post("desc_asc")));
 			$this->orderby = strtolower(trim($this->input->post("orderby")));
 			
-			$this->join_s_id = explode(',',($this->hselect.','.$this->tselect)); 
+			$this->join_s_id = explode('#',($this->hselect.'#'.$this->tselect)); 
 			
 			$arr_aso_tselect_=array();
 			for($ub=0; $ub<count($this->a_tselect); $ub++){
@@ -171,15 +171,15 @@ class Crud extends CI_Controller {
 			$this->arr_aso_tselect=$arr_aso_tselect_;
 			
 			
-			$this->tbl_insert = explode(',',strtolower($this->input->post("tbl_insert")));
-			$this->field_insert = explode('*',strtolower($this->input->post("field_insert")));
+			$this->tbl_insert = explode('#',strtolower($this->input->post("tbl_insert")));
+			$this->field_insert = explode('#',strtolower($this->input->post("field_insert")));
 			
-			$this->tbl_update = explode(',',strtolower($this->input->post("tbl_update")));
-			$this->field_update = explode('*',strtolower($this->input->post("field_update")));
-			$this->id_update = explode(',',strtolower($this->input->post("id_update")));
+			$this->tbl_update = explode('#',strtolower($this->input->post("tbl_update")));
+			$this->field_update = explode('#',strtolower($this->input->post("field_update")));
+			$this->id_update = explode('#',strtolower($this->input->post("id_update")));
 			
-			$this->tbl_delete = explode(',',strtolower($this->input->post("tbl_delete")));
-			$this->id_delete = explode(',',strtolower($this->input->post("id_delete")));
+			$this->tbl_delete = explode('#',strtolower($this->input->post("tbl_delete")));
+			$this->id_delete = explode('#',strtolower($this->input->post("id_delete")));
 			
 					
 			$this->form_tampil = strtolower(trim($this->input->post("form_tampil")));
@@ -187,12 +187,12 @@ class Crud extends CI_Controller {
 			$this->tipe_field = strtolower(trim($this->input->post("tipe_field")));
 			$this->load_field = strtolower(trim($this->input->post("load_field")));
 			
-			$this->form_tampil_a = explode(',',$this->form_tampil);
-			$this->form_hiden_a = explode(',',$this->form_hiden);
-			$this->tipe_field_a = explode(',',$this->tipe_field);
-			$this->load_field_a = explode('|',$this->load_field);
-			$this->caption_field_a = explode(',',strtolower($this->input->post("caption_field")));
-			$this->join_field_form = explode(',',($this->form_tampil.','.$this->form_hiden)); 
+			$this->form_tampil_a = explode('#',$this->form_tampil);
+			$this->form_hiden_a = explode('#',$this->form_hiden);
+			$this->tipe_field_a = explode('#',$this->tipe_field);
+			$this->load_field_a = explode('#',$this->load_field);
+			$this->caption_field_a = explode('#',strtolower($this->input->post("caption_field")));
+			$this->join_field_form = explode('#',($this->form_tampil.'#'.$this->form_hiden)); 
 					
 			$cname = strtolower($this->input->post("cname"));
 			$this->controllername = str_replace(' ', '_', $cname);
@@ -611,7 +611,7 @@ function build_view_create() {
 				';
 				for($i=0; $i<count($this->tbl_insert); $i++){
 				$arr_insr_=array();
-				$arr_insr = explode(',',strtolower(trim($this->field_insert[$i])));
+				$arr_insr = explode('#',strtolower(trim($this->field_insert[$i])));
 				for($iub=0; $iub<count($arr_insr); $iub++){
 					$model .= '
 					$arr_insr_[\''.trim($arr_insr[$iub]).'\']=$data_post["'.trim($arr_insr[$iub].$this->gen_id).'"];
@@ -640,7 +640,7 @@ function build_view_create() {
 					';
 					for($i=0; $i<count($this->tbl_update); $i++){
 				$arr_insr_=array();
-				$arr_insr = explode(',',strtolower($this->field_update[$i]));
+				$arr_insr = explode('#',strtolower($this->field_update[$i]));
 				for($iub=0; $iub<count($arr_insr); $iub++){
 				$model .= '$arr_insr_[\''.trim($arr_insr[$iub]).'\']=$data_post[\''.trim($arr_insr[$iub].$this->gen_id).'\'];
 				

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AksiIDE>
+  <project>
+    <name>simrs_pg</name>
+    <module/>
+    <moduleid/>
+    <framework>
+      <name>CodeIgniter</name>
+    </framework>
+    <site>
+      <RunAs>0</RunAs>
+      <url>http://localhost/charismasimrs</url>
+    </site>
+    <database/>
+    <js/>
+    <git/>
+  </project>
+</AksiIDE>
