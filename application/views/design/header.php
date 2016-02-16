@@ -84,8 +84,8 @@
 	<?php
 	
 			if (isset($dp) && $dp==true) {
-				echo assets_css(array('pub/dist/css/bootstrap-datetimepicker.min.css'));
-                echo assets_js(array('pub/dist/js/bootstrap-datetimepicker.min.js','pub/dist/locales/bootstrap-datetimepicker.id.js'));
+				echo assets_css(array('pub/css/bootstrap-datetimepicker.min.css'));
+                echo assets_js(array('pub/js/bootstrap-datetimepicker.min.js','pub/locales/bootstrap-datetimepicker.id.js'));
             }
 			if (isset($dd) && $dd==true) {
 				echo assets_css(array('pub/css/bootstrap-select.min.css'));

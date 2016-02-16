@@ -91,7 +91,7 @@
                         </div>
                         
                          <div id="body"  class="col-lg-12">
-                            <label>Load Query Field (Use # Sebagai Pemisah Antar Query)</label>  <textarea   name="load_field"  id="load_field" class="form-control spellcheck="false" style="font-size:15px; font-weight:bold; color:#333" rows="4" cols="50" validate[required]" placeholder="Load Field"  ><?php echo set_value('load_field');  ?></textarea>
+                            <label>Load Query Field (Use # Sebagai Pemisah Antar Query)</label>  <textarea   name="load_field"  id="load_field"  class="form-control validate[required]" spellcheck="false" style="font-size:15px; font-weight:bold; color:#333" rows="8" cols="50"  placeholder="Load Field"  ><?php echo set_value('load_field');  ?></textarea>
                         </div>
                         
                         
@@ -143,9 +143,10 @@
                     
                     </div>
                     
-                    <div id="body"  class="col-lg-3">
+                    <div id="body"   class="col-lg-3">
                         <input id="" type="submit" name="submit" class="btn btn-lg btn-primary" value="submit">
-                        <input type="submit" name="download" class="btn btn-lg btn-primary " value="Dowload">
+                        <input  type="submit"  name="download" class="btn btn-lg btn-primary " value="Dowload">
+                        
                     </div>
 
                     <div id="body"  class="col-lg-2">
@@ -276,21 +277,21 @@ if (isset($view_create)) {
 		res= res.replace(/,/g, "#"); 
 		$('#caption_field').val(res);
 		})
-	$('#load_field').change(function(){
-		var res =$('#load_field').val();
-		res= res.replace(/,/g, "#"); 
-		$('#load_field').val(res);
-		})
+	//$('#load_field').change(function(){
+//		var res =$('#load_field').val();
+//		res= res.replace(/,/g, "#"); 
+//		$('#load_field').val(res);
+//		})
 	$('#tbl_insert').change(function(){
 		var res =$('#tbl_insert').val();
 		res= res.replace(/,/g, "#"); 
 		$('#tbl_insert').val(res);
 		})
-	$('#field_insert').change(function(){
-		var res =$('#field_insert').val();
-		res= res.replace(/,/g, "#"); 
-		$('#field_insert').val(res);
-		})
+	//$('#field_insert').change(function(){
+//		var res =$('#field_insert').val();
+//		res= res.replace(/,/g, "#"); 
+//		$('#field_insert').val(res);
+//		})
 	$('#tbl_update').change(function(){
 		var res =$('#tbl_update').val();
 		res= res.replace(/,/g, "#"); 

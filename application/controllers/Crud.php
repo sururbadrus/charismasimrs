@@ -193,7 +193,7 @@ class Crud extends CI_Controller {
 			$this->load_field_a = explode('#',$this->load_field);
 			$this->caption_field_a = explode('#',strtolower($this->input->post("caption_field")));
 			$this->join_field_form = explode('#',($this->form_tampil.'#'.$this->form_hiden)); 
-					
+					//print_r($this->load_field_a);
 			$cname = strtolower($this->input->post("cname"));
 			$this->controllername = str_replace(' ', '_', $cname);
             $this->fname = strtolower($this->input->post("fname"));
@@ -216,6 +216,8 @@ class Crud extends CI_Controller {
 					$this->ac[trim($this->form_tampil_a[$i])]=trim($this->load_field_a[$i]);
 					}
 			}
+		   
+		  // var_dump($this->dd)."<br>";
 		   
 		   
             $this->controller_data = $controller = $this->build_controller();
@@ -253,7 +255,60 @@ class Crud extends CI_Controller {
            // print_r($_POST);
             if (isset($_POST['download'])) {
               
-                $this->download();
+                $this->load->helper('file');
+				$path = "./application/modules/".trim($this->controllername);
+				if(!is_dir($path)) //create the folder if it's not already exists
+				{
+				  mkdir($path,0755,TRUE);
+				} 
+				$path = "./application/modules/".trim($this->controllername)."/controllers";
+				if(!is_dir($path)) //create the folder if it's not already exists
+				{
+				  mkdir($path,0755,TRUE);
+				}
+				$path = "./application/modules/".trim($this->controllername)."/models";
+				if(!is_dir($path)) //create the folder if it's not already exists
+				{
+				  mkdir($path,0755,TRUE);
+				}
+				
+				$path = "./application/modules/".trim($this->controllername)."/views";
+				if(!is_dir($path)) //create the folder if it's not already exists
+				{
+				  mkdir($path,0755,TRUE);
+				} 
+				
+				
+				$data = $this->controller_data;
+		
+				if ( ! write_file('./application/modules/'.trim($this->controllername).'/controllers/'.ucfirst(trim($this->controllername)).'.php', $data))
+				{
+					 //echo 'Unable to write the file';
+				}
+				
+				
+				$data = $this->create_data;
+		
+				if (! write_file('./application/modules/'.trim($this->controllername).'/views/'.trim($this->create_viewname).'.php', $data))
+				{
+					 //echo 'Unable to write the file';
+				}
+				
+				$data = $this->model_data;
+		
+				if (! write_file('./application/modules/'.trim($this->controllername).'/models/'.trim(ucfirst($this->modelname)).'.php', $data) )
+				{
+					// echo 'Unable to write the file';
+				}
+				
+				$data = $this->js;
+		
+				if (! write_file('./assets/jsku/'.trim($this->javascript_name).'.js', $data) )
+				{
+					 //echo 'Unable to write the file';
+				}
+				
+				
             }
         }
 
@@ -299,7 +354,7 @@ class Crud extends CI_Controller {
 	}
 		function index(){
 			$data_header=array();$data_footer=array();$data=array();
-			$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>false);
+			$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>true);
 			$data_header["edit_txt"]=true; 
 			$data_header["tampil_menu"]=$this->session->userdata(\'menu\'); 
 			$data_header["profil"] =$this->session->userdata(\'profil\'); 
@@ -308,12 +363,10 @@ class Crud extends CI_Controller {
 			foreach($this->dd as $in=>$val){
 				if($val!=''){
 	$controller .= '
-			$data["'.trim($in.$this->gen_id).'"]=$this->m_global->getcombo("'.trim($val).'","");
-		';
+			$data["'.trim($in.$this->gen_id).'"]=$this->'.$this->modelname.'->'.trim($in.$this->gen_id).'();';
 			}else{
 				$controller .= '
-			$data["'.trim($in.$this->gen_id).'"]=array(1=>\'Aktif\',0=>\'Tidak Aktif\');
-		';
+			$data["'.trim($in.$this->gen_id).'"]=array(1=>\'Aktif\',0=>\'Tidak Aktif\');';
 					
 				}
 		}
@@ -335,9 +388,20 @@ class Crud extends CI_Controller {
 			';}
 			$controller .= '
 		}';
-       
-        $controller .= '  
+       	
+		foreach($this->ac as $inx=>$val){
+			$controller .= ' 
+		function '.trim($inx).'(){
+			$data=array();
+			$ftr  = $_POST[\''.trim($inx).'\'];
+			$sql="'.trim($val).' where '.trim($inx).' like \'%".trim($ftr)."%\'";
+			$hasil = $this->db->query($sql)->result_array();
+			 echo json_encode($hasil);
+		}
+			';
+		}
 		
+        $controller .= '  
 		function view_grid'.$this->gen_id.'(){
 			return $this->'.strtolower($this->controllername).'_model->mgrid'.$this->gen_id.'();
 		}
@@ -359,18 +423,18 @@ function build_view_create() {
 		$view .= '
 
 <div class="row">
-            <div class="row">
-                 <h4 class="col-xs-12 col-sm-12 col-md-12 col-lg-12 "><u>'.trim(ucfirst($this->fname)).'</u></h4>
-			</div>
+	<div class="row">
+		<h4 class="col-xs-12 col-sm-12 col-md-12 col-lg-12 "><u><strong>'.trim(ucfirst($this->fname)).'</strong></u></h4>
+	</div>
 				<?php
-					$attributes = array(\'class\' => \'form-group\',\'name\' => \'form_'.trim($this->controllername).$this->gen_id.'\', \'id\' => \'form_'.trim($this->controllername).$this->gen_id.'\');
-					echo form_open(\'\', $attributes);
+			$attributes = array(\'class\' => \'form-group\',\'name\' => \'form_'.trim($this->controllername).$this->gen_id.'\', \'id\' => \'form_'.trim($this->controllername).$this->gen_id.'\');
+		echo form_open(\'\', $attributes);
 					?>
 						';
 								
-								for($i=0; $i<count($this->form_hiden_a); $i++){
-					 $view .= '   
-                                   <input name="'.trim($this->form_hiden_a[$i]).$this->gen_id.'" id="'.trim($this->form_hiden_a[$i]).$this->gen_id.'" type="hidden" value="" />
+			for($i=0; $i<count($this->form_hiden_a); $i++){
+		$view .= '
+					<input name="'.trim($this->form_hiden_a[$i]).$this->gen_id.'" id="'.trim($this->form_hiden_a[$i]).$this->gen_id.'" type="hidden" value="" />
 								   ';
 								   }
 							   
@@ -381,33 +445,33 @@ function build_view_create() {
 			if(trim($this->tipe_field_a[$i])=='dd'||trim($this->tipe_field_a[$i])=='chk'||trim($this->tipe_field_a[$i])=='ta'){
 				if(trim($this->tipe_field_a[$i])=='dd'){// dropdwon
 					$view .= '   
-						 <div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">  
-					         <label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
-                               <div class="field">
-									<?=form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control validate[required]"\')?>
-									<span class="help-block"></span>
-								</div>
-                         </div>';
+			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
+				<label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
+					<div class="field">
+						<?=form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control validate[required]"\')?>
+							<span class="help-block"></span>
+					</div>
+			</div>';
 				}
 				else if(trim($this->tipe_field_a[$i])=='chk'){ //cheked
-					$view .= '   
-						 <div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">  
-				             <label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
-                                <div class="field" style="padding-top: 2.2%;">
-				                    <input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="' . trim($this->form_tampil_a[$i].$this->gen_id) . '" type="checkbox"  class="validate[required] " placeholder="' . ucfirst(trim($this->caption_field_a[$i])) . '"  />
-									<span class="help-block"></span>
-									 </div>
-                             </div>';
+					$view .= '
+			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
+				<label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
+					<div class="field" style="padding-top: 2.2%;">
+						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="' . trim($this->form_tampil_a[$i].$this->gen_id) . '" type="checkbox"  class="validate[required] " placeholder="' . ucfirst(trim($this->caption_field_a[$i])) . '"  />
+							<span class="help-block"></span>
+					</div>
+			</div>';
 							}
 							else{ //text area
-					$view .= '   
-						 <div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">  
-					         <label>' . ucfirst(trim($this->caption_field_a[$i])) . '</label>
-                    	           <div class="field">
-					                   <textarea name="'.trim($this->form_tampil_a[$i].$this->gen_id). '" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"   class="validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" ></textarea>
-									   <span class="help-block"></span>
-                                    </div>
-                             </div>';
+					$view .= '
+			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
+				<label>' . ucfirst(trim($this->caption_field_a[$i])) . '</label>
+					<div class="field">
+						<textarea name="'.trim($this->form_tampil_a[$i].$this->gen_id). '" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"   class="validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" ></textarea>
+							<span class="help-block"></span>
+					</div>
+			</div>';
 								
 								}
 				}
@@ -416,32 +480,29 @@ function build_view_create() {
 				{
 					
 					
-					 $view .= '   
-					 
-					 <div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">  
-                           <label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
-                                <div class="field">
-										';
+					 $view .= '
+			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
+				<label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
+					<div class="field">
+					';
 					if(trim($this->tipe_field_a[$i])=='dp'){
-					$view .= ' 										
-        	                         <input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="<?=$'.trim($this->form_tampil_a[$i].$this->gen_id).'?>" />
-									 <span class="help-block"></span>
-										';
+					$view .= '
+						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="<?=$'.trim($this->form_tampil_a[$i].$this->gen_id).'?>" />
+							<span class="help-block"></span>';
 										}else{
-									$view .= ' 										
-                                        <input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="" />
-										<span class="help-block"></span>
-										';
+					$view .= '
+						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="" />
+							<span class="help-block"></span>';
 											}
-										$view .= ' 
-                	          </div>
-                     </div>';
+					$view .= '
+					</div>
+			</div>';
 					
 					
 				}
 					}
       $view .= 
-			'</div>   
+	'</div>   
                         
         <br/>                                    
          <div class="row">                            
@@ -571,7 +632,7 @@ function build_view_create() {
 			}';
 			$model .= ' 
 			
-		function proses_simpan'.$this->gen_id.'() {
+	function proses_simpan'.$this->gen_id.'() {
 		$data = array();
 		$data[\'error_string\'] = array();
 		$data[\'inputerror\'] = array();
@@ -589,36 +650,29 @@ function build_view_create() {
 		for($i=0; $i<count($this->form_tampil_a); $i++){
 		$model .= '
 			if(form_error(\''.trim($this->form_tampil_a[$i]).'\')){
-				
 				$data[\'inputerror\'][] = \''.trim($this->form_tampil_a[$i].$this->gen_id).'\';
 				$data[\'error_string\'][] = \'Field '.trim($this->caption_field_a[$i]).' Harus Diisi\';
 				$data[\'status\'] = FALSE;
-				
-				}
+			}
 			';
 			}
 			$model .= '
 			echo json_encode(array(\'dt\'=>$data));
 			exit();
 		}';
-		
-			
 		$model .= '
-			
-			
 			switch ($data_post["act"]) {
 				case \'Simpan\':
 				';
 				for($i=0; $i<count($this->tbl_insert); $i++){
 				$arr_insr_=array();
-				$arr_insr = explode('#',strtolower(trim($this->field_insert[$i])));
+				$arr_insr = explode(',',strtolower(trim($this->field_insert[$i])));
 				for($iub=0; $iub<count($arr_insr); $iub++){
 					$model .= '
-					$arr_insr_[\''.trim($arr_insr[$iub]).'\']=$data_post["'.trim($arr_insr[$iub].$this->gen_id).'"];
-					';
+					$arr_insr_[\''.trim($this->tbl_insert[$i]).'\'][\''.trim($arr_insr[$iub]).'\']=$data_post["'.trim($arr_insr[$iub].$this->gen_id).'"];';
 				}
 			$model .= '
-			 $sql_q['.$i.']= $this->db->insert_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_); 
+			 $sql_q['.$i.']= $this->db->insert_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_[\''.trim($this->tbl_insert[$i]).'\']); 
 					 ';}
 			$model .= '
 			$this->db->trans_begin();
@@ -640,7 +694,7 @@ function build_view_create() {
 					';
 					for($i=0; $i<count($this->tbl_update); $i++){
 				$arr_insr_=array();
-				$arr_insr = explode('#',strtolower($this->field_update[$i]));
+				$arr_insr = explode(',',strtolower($this->field_update[$i]));
 				for($iub=0; $iub<count($arr_insr); $iub++){
 				$model .= '$arr_insr_[\''.trim($arr_insr[$iub]).'\']=$data_post[\''.trim($arr_insr[$iub].$this->gen_id).'\'];
 				
@@ -682,7 +736,15 @@ function build_view_create() {
 			}
 	}';
 	
-		
+	foreach($this->dd as $in=>$val){
+			if($val!=''){
+	$model .= '
+		function '.trim($in).$this->gen_id.'()
+			{
+				return $this->m_global->getcombo("'.trim($val).'","");
+				}';
+			}
+		}
 	$model .= ' 
 		
 		function excell'.$this->gen_id.'(){
@@ -783,7 +845,7 @@ $model .=' $tbl.=\'</tr>\';
 		
 		foreach($this->ac as $inx=>$val){
 			$model .= ' 
-			function '.trim($inx).'(){
+		function '.trim($inx).'(){
 			$data=array();
 			$ftr  = element(\''.trim($inx).'\',$_POST);
 			$sql="'.trim($val).' where '.trim($inx).' like \'%".trim($ftr)."%\'";
@@ -850,11 +912,8 @@ $model .=' $tbl.=\'</tr>\';
             			responsive_jqgrid($(".jqGrid"));
         			}				
 				});
-				
-				jQuery("#list2'.$this->gen_id.'").jqGrid(\'navGrid\',\'#pager2'.$this->gen_id.'\',{view:false,edit:false,add:false,del:false,search:false,refresh:true});	
-
+		jQuery("#list2'.$this->gen_id.'").jqGrid(\'navGrid\',\'#pager2'.$this->gen_id.'\',{view:false,edit:false,add:false,del:false,search:false,refresh:true});
 		jQuery("#list2'.$this->gen_id.'").jqGrid(\'navButtonAdd\',"#pager2'.$this->gen_id.'",{caption:"Cari",title:"Cari", buttonicon :\'ui-icon-search\', onClickButton:function(){ mygrid'.$this->gen_id.'[0].toggleToolbar() } }); 
-		
 		jQuery("#list2'.$this->gen_id.'").jqGrid(\'filterToolbar\',{
             stringResult: true,
             searchOnEnter : true
@@ -862,40 +921,35 @@ $model .=' $tbl.=\'</tr>\';
 		mygrid'.$this->gen_id.'[0].toggleToolbar();
 		jQuery("#list2'.$this->gen_id.'").setGridParam({onSelectRow:function(id){
 		var data_'.$this->gen_id.'=id.split(\',\');
-			$(\'#simpandata'.$this->gen_id.'\').val(\'Ubah\');
-			';
+			$(\'#simpandata'.$this->gen_id.'\').val(\'Ubah\');';
 				$hsl__='';
 					for($i=0; $i<count($this->join_field_form); $i++){
 						$hsl__=element(trim($this->join_field_form[$i]), $this->arr_aso_tselect);
 					  if(is_null($hsl__)){
 						  $hsl__=element(trim($this->join_field_form[$i]), $this->arr_aso_hselect);
 						  if(is_null($hsl__)){
-							  $javascript .= '
-							  $("#'.trim($this->join_field_form[$i].$this->gen_id).'").val(data_'.$this->gen_id.'[0]);
-							  ';	
+$javascript .= '
+			$("#'.trim($this->join_field_form[$i].$this->gen_id).'").val(data_'.$this->gen_id.'[0]);';	
 						  }else{
 							  for($iu=0; $iu<count($this->a_hselect); $iu++){
 								  if(trim($this->a_hselect[$iu])==trim($hsl__)){
-									  $javascript .= '
-										  $("#'.trim($hsl__.$this->gen_id).'").val(data_'.$this->gen_id.'['.$iu.']);			
-						  ';
+$javascript .= '
+			$("#'.trim($hsl__.$this->gen_id).'").val(data_'.$this->gen_id.'['.$iu.']);';
 								  }
 							  }
 						  }
 					}else{
 						if($this->tipe_field_a[$i]=='chk'){
 								$javascript .= '
-							if(jQuery("#list2'.$this->gen_id.'").jqGrid(\'getCell\',id,\''.trim($hsl__).'\')==\'1\'){
-								$("#'.trim($hsl__.$this->gen_id).'").prop("checked", true);
-							}else{
-								$("#'.trim($hsl__.$this->gen_id).'").prop("checked", false);
-									
-							}
-						';
+			if(jQuery("#list2'.$this->gen_id.'").jqGrid(\'getCell\',id,\''.trim($hsl__).'\')==\'1\'){
+				$("#'.trim($hsl__.$this->gen_id).'").prop("checked", true);
+			}else{
+				$("#'.trim($hsl__.$this->gen_id).'").prop("checked", false);
+					
+			}';
 						}else{
-							$javascript .= '
-							$("#'.trim($hsl__.$this->gen_id).'").val(jQuery("#list2'.$this->gen_id.'").jqGrid(\'getCell\',id,\''.trim($hsl__).'\'));
-						';
+$javascript .= '
+			$("#'.trim($hsl__.$this->gen_id).'").val(jQuery("#list2'.$this->gen_id.'").jqGrid(\'getCell\',id,\''.trim($hsl__).'\'));';
 						}
 					}
 				}
@@ -927,48 +981,39 @@ $model .=' $tbl.=\'</tr>\';
 		';
 		
 		$javascript .= '
-			$("#form_'.trim($this->controllername).$this->gen_id.'").validationEngine({promptPosition : "topRight", scroll: false});
-			
-			$("#simpandata'.$this->gen_id.'").click(function(){
-					$("#h_form'.$this->gen_id.'").val($("#simpandata'.$this->gen_id.'").val());
-					$("#form_'.trim($this->controllername).$this->gen_id.'").trigger("submit");
-				})
-			$("#hpus'.$this->gen_id.'").click(function(){
-				$("#h_form'.$this->gen_id.'").val($("#hpus'.$this->gen_id.'").val())
-				$("#form_'.trim($this->controllername).$this->gen_id.'").trigger("submit");
-			});
-			
-			
-			 $("#form_'.trim($this->controllername).$this->gen_id.'").submit(function() { 
-		  var act=$("#h_form'.$this->gen_id.'").val();
-		   $(this).ajaxSubmit({
+		$("#form_'.trim($this->controllername).$this->gen_id.'").validationEngine({promptPosition : "topRight", scroll: false});
+		$("#simpandata'.$this->gen_id.'").click(function(){
+			$("#h_form'.$this->gen_id.'").val($("#simpandata'.$this->gen_id.'").val());
+			$("#form_'.trim($this->controllername).$this->gen_id.'").trigger("submit");
+		})
+		$("#hpus'.$this->gen_id.'").click(function(){
+			$("#h_form'.$this->gen_id.'").val($("#hpus'.$this->gen_id.'").val())
+			$("#form_'.trim($this->controllername).$this->gen_id.'").trigger("submit");
+		});
+		$("#form_'.trim($this->controllername).$this->gen_id.'").submit(function() { 
+			var act=$("#h_form'.$this->gen_id.'").val();
+			$(this).ajaxSubmit({
 			data:{"act":act},
 			beforeSubmit:  function (formData, jqForm, options) { 
 							if($("#form_'.trim($this->controllername).$this->gen_id.'").validationEngine("validate")){
 								var conf = confirm("Yakin Akan "+act+" Data Ini?");
 								if(conf) return true; else return false;
-								
 							}else{
 								return false;
 							}
 						} ,
-			success:       function(data)  { 
-			
+			success:       function(data)  {
 							if(data.dt.status) 
 							{
 								$("#simpandata'.$this->gen_id.'").val("Simpan");
-								$("#form_'.trim($this->controllername).$this->gen_id.'").resetForm();
-								$("#form_'.trim($this->controllername).$this->gen_id.'").clearForm();
 								jQuery("#list2'.$this->gen_id.'").trigger("reloadGrid");
 								$("#batal'.$this->gen_id.'").trigger(\'click\');
 								alert(data.ket);
-								
-							}
+								}
 							else
 							{
 								for (var i = 0; i < data.dt.inputerror.length; i++) 
 								{
-									
 									$(\'[name="\'+data.dt.inputerror[i]+\'"]\').parent().parent().addClass(\'has-error\'); 
 									$(\'[name="\'+data.dt.inputerror[i]+\'"]\').next().text(data.dt.error_string[i]); 
 								}
@@ -978,10 +1023,8 @@ $model .=' $tbl.=\'</tr>\';
 	 
 			url:base_js+\'index.php/'.trim($this->controllername).'/crud'.$this->gen_id.'\',
 			type:"post",       
-			dataType:"JSON",   
-				 
-			}); 
-	 
+			dataType:"JSON",
+			});
 			return false; 
 		}); 
 			
@@ -991,88 +1034,76 @@ $model .=' $tbl.=\'</tr>\';
 			
 			$("#form_'.trim($this->controllername).$this->gen_id.'").validationEngine(\'hideAll\');
 			$(\'#simpandata'.$this->gen_id.'\').val(\'Simpan\');
-			$("#h_form'.$this->gen_id.'").val("")
-			';
+			$("#h_form'.$this->gen_id.'").val("")';
 			
 			for($i=0; $i<count($this->form_hiden_a); $i++){
 						$javascript .= '
-						
-						$(\'#'.trim($this->form_hiden_a[$i].$this->gen_id).'\').val(\'\');';
-							
-						
-						}
+			$(\'#'.trim($this->form_hiden_a[$i].$this->gen_id).'\').val(\'\');';
+			}
 						
 			for($i=0; $i<count($this->form_tampil_a); $i++){
-						
-						if(trim($this->tipe_field_a[$i])=='chk'){
-						$javascript .= '
-							$("#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop("checked", false);
-						';
-						}else if(trim($this->tipe_field_a[$i])=='dd'){
-						$javascript .= '
-							
-							$("select#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop(\'selectedIndex\', 0);
-						';
-						}else{
-						$javascript .= '
-							$(\'#'.trim($this->form_tampil_a[$i].$this->gen_id).'\').val(\'\');
-						';	
-							
-							
-							
-						}
-						
-						}
-			
-			
-			$javascript .= '
-			})
-			';
+				if(trim($this->tipe_field_a[$i])=='chk'){
+		  $javascript .= '
+		  $("#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop("checked", false);';
+		  }else if(trim($this->tipe_field_a[$i])=='dd'){
+		  $javascript .= '
+		  $("select#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop(\'selectedIndex\', 0);';
+		  }
+	}
+	$javascript .= '
+		  $("#form_'.trim($this->controllername).$this->gen_id.'").resetForm();
+		  $("#form_'.trim($this->controllername).$this->gen_id.'").clearForm();';
+		
+	$javascript .= '
+			})';
 			
 			for($i=0; $i<count($this->dp); $i++){
-			
-				$javascript .= '
-							$( "#'.trim($this->dp[$i].$this->gen_id).'" ).datepicker({
-							dateFormat : \'dd-mm-yy\',
-							onClose: function (){
-								
-							}
-							});
-							';			
+			$javascript .= '
+		$("#'.trim($this->dp[$i].$this->gen_id).'").datetimepicker({
+				language:  "id",
+				format:"dd-mm-yyyy",
+				autoclose:1,
+				todayBtn: true,
+				startView: 2,
+				minView: 2,
+				}).on("hide", function(e) {
+					if($(this).val()!=""){
+						//alert("");
+						}
+				 });';			
 			}
 			
-			$ubi=0;
+		$ubi=0;
 			
 			foreach($this->ac as $inx=>$val){
-			
-			$javascript .= ' 
-			
-			$(\'#'.trim($inx).$this->gen_id.').autocomplete({
-				minLength : 1,
-				source: function(request, response) {
-					$.ajax({
-						type : \'POST\',
-						url: base_js+\'/index.php/'.trim($this->controllername).'/'.trim($inx).',
-						dataType: "json",
-						data: {						
-								\''.trim($inx).'\' : $("#'.trim($inx.$this->gen_id).'").val()
-						 },
-						success: function(data) {
-							response( $.map( data, function( item ) {							
-								return {
-									label: item.nama,
-									value: item.nama,
-									allData : item
-								}
-							}));						
-						}
-					});
+	$javascript .= ' 
+		$(\'#'.trim($inx).$this->gen_id.'\').typeahead({
+			onSelect: function(item) {
+				 $(\'#hdiag\').val(item.value);
+			},
+			ajax: {
+				url: base_js+"/index.php/'.trim($this->controllername).'/'.$inx.'",
+				timeout: 500,
+				triggerLength: 1,
+				method: "post",
+				loadingClass: "loading-circle",
+				preDispatch: function (query) {
+					return {
+						search: query
+					}
 				},
-				select : function(event, ui){
-					// $("#'.trim($inx.$this->gen_id.$ubi).'").val(ui.item.allData.id);
-				   
+				preProcess: function (data) {
+					//showLoadingMask(false);
+					if (data.success === false) {
+						// Hide the list, there was some error
+						return false;
+					}
+					// We good!
+					return data;
 				}
-			});
+			}
+		});
+			
 			
 			';
 		$ubi++;
@@ -1090,41 +1121,61 @@ $model .=' $tbl.=\'</tr>\';
         //// $this->create_data = $view_create = $this->build_view_create($fields);
         /// $this->model_data = $model = $this->build_model($fields);
         // $this->list_data
+		$this->load->helper('file');
+		$path = "./application/moduls/";
+		if(!is_dir($path)) //create the folder if it's not already exists
+		{
+		  mkdir($path,0755,TRUE);
+		} 
+		
+		
+		$data = $this->controller_data;
 
+		if ( ! write_file('./application/controllers/'.$this->controllername.'.php', $data))
+		{
+			 echo 'Unable to write the file';
+		}
+		
+		
+		$data = $this->create_data;
 
+		if ( ! write_file('./application/views/'.$this->create_viewname.'.php', $data))
+		{
+			 echo 'Unable to write the file';
+		}
 
-        $this->load->library('zip');
-        $controller_date = $this->controller_data;
-        $model_date = $this->model_data;
-        $create_view_date = $this->create_data;
-        $create_list_date = $this->list_data;
-        $header_date = $this->header_data;
-        $footer_date = $this->footer_data;
-
-        $controller_file_name = 'controllers/' . $this->controllername . '.php';
-        $model_file_name = 'models/' . $this->modelname . '.php';
-        $createview_file_name = 'views/' . $this->create_viewname . '.php';
-        $listview_file_name = 'views/' . $this->create_viewname . '.php';
-
-
-
-        $header_file_name = 'views/' . $this->header . '.php';
-        $footer_file_name = 'views/' . $this->footer . '.php';
-        $this->zip->add_data($controller_file_name, $controller_date);
-        $this->zip->add_data($model_file_name, $model_date);
-        $this->zip->add_data($createview_file_name, $create_view_date);
-        $this->zip->add_data($listview_file_name, $create_list_date);
-
-        //header and footer
-        $this->zip->add_data($header_file_name, $header_date);
-        $this->zip->add_data($footer_file_name, $footer_date);
-
-// Write the zip file to a folder on your server. Name it "my_backup.zip"
-        $this->zip->archive('temp/' . $this->controllername . '.zip');
-
-// Download the file to your desktop. Name it "my_backup.zip"
-        $this->zip->download($this->controllername . '.zip');
-        //force_download($name, $data);
+        //$this->load->library('zip');
+//        $controller_date = $this->controller_data;
+//        $model_date = $this->model_data;
+//        $create_view_date = $this->create_data;
+//        $create_list_date = $this->list_data;
+//        $header_date = $this->header_data;
+//        $footer_date = $this->footer_data;
+//
+//        $controller_file_name = 'controllers/' . $this->controllername . '.php';
+//        $model_file_name = 'models/' . $this->modelname . '.php';
+//        $createview_file_name = 'views/' . $this->create_viewname . '.php';
+//        $listview_file_name = 'views/' . $this->create_viewname . '.php';
+//
+//
+//
+//        $header_file_name = 'views/' . $this->header . '.php';
+//        $footer_file_name = 'views/' . $this->footer . '.php';
+//        $this->zip->add_data($controller_file_name, $controller_date);
+//        $this->zip->add_data($model_file_name, $model_date);
+//        $this->zip->add_data($createview_file_name, $create_view_date);
+//        $this->zip->add_data($listview_file_name, $create_list_date);
+//
+//        //header and footer
+//        $this->zip->add_data($header_file_name, $header_date);
+//        $this->zip->add_data($footer_file_name, $footer_date);
+//
+//// Write the zip file to a folder on your server. Name it "my_backup.zip"
+//        $this->zip->archive('temp/' . $this->controllername . '.zip');
+//
+//// Download the file to your desktop. Name it "my_backup.zip"
+//        $this->zip->download($this->controllername . '.zip');
+//        //force_download($name, $data);
     }
 
 }

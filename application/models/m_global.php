@@ -14,9 +14,10 @@ class M_global extends CI_Model {
 	function getcombo($sq='',$uk)
 	 {
 		 $data=array();
-	
+		//echo $sq."<br>"; 
 		 if($sq!=''){
 		 $query = $this->db->query($sq);
+		 
 		 
 		 if ($query->num_rows()> 0){
 			 if(isset($uk) && $uk=='a') 
