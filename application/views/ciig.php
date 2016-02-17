@@ -2,7 +2,7 @@
             <div class="container">
 
                 <form name="" action="" id="ubet_form" class="form-signin"  method="post">
-                    <h4 class="form-signin-heading" ><u>TABLE MVC</u></h4>
+                    <h4 class="form-signin-heading" ><u><strong>TABLE MVC</strong></u></h4>
                     <?php echo validation_errors(); ?>
                     
                     <div class="row">
@@ -20,7 +20,7 @@
                         
                     </div>
                     
-                    <h4 class="form-signin-heading" ><u>JQGRID</u></h4>
+                    <h4 class="form-signin-heading" ><u><strong>GRID</strong></u></h4>
                     <div class="row">
                     <div id="body"  class="col-lg-12">
                         <label>Full Query Grid</label>  <textarea style="font-size:15px; font-weight:bold; color:#333" id="full_q"  name="full_q"  class="form-control validate[required]" spellcheck="false"  rows="10" cols="50"  placeholder="Full Query"  ><?php echo set_value('full_q');  ?></textarea>
@@ -66,7 +66,7 @@
 					</div>
                     
                     
-                     <h4 class="form-signin-heading" ><u>FORM</u></h4>
+                     <h4 class="form-signin-heading" ><u><strong>FORM</strong></u></h4>
                     <div class="row">
                     <div id="body"  class="col-lg-12">
                             <label>Form title</label>  <input style="font-size:15px; font-weight:bold; color:#333" type="text" spellcheck="false" name="fname" id="fname"  class="form-control validate[required]"   placeholder="Form title" value="<?php echo set_value('fname'); ?>" >
@@ -77,7 +77,9 @@
                          <div id="body"  class="col-lg-12">
                             <label>Field Hiden( Use # )</label>  <textarea  style="font-size:15px; font-weight:bold; color:#333" spellcheck="false" rows="4" cols="50"  name="form_hiden"  id="form_hiden" class="form-control validate[required]"   placeholder="Form Hiden"  ><?php echo set_value('form_hiden');  ?></textarea>
                         </div>
-                        
+                        <div id="body"  class="col-lg-12">
+                            <label>Validasi Form( Use # Sebagai Pemisah Jika Y Maka ada validasi Kalau Tidak Kosongi)</label>  <textarea  style="font-size:15px; font-weight:bold; color:#333" spellcheck="false" rows="4" cols="50"  name="validasi_form"  id="validasi_form" class="form-control validate[required]"   placeholder="Form Hiden"  ><?php echo set_value('validasi_form');  ?></textarea>
+                        </div>
                     
                     </div>
                     
@@ -100,7 +102,7 @@
                     
                     </div>
                     
-                     <h4 class="form-signin-heading" ><u>PROSES INSERT</u></h4>
+                     <h4 class="form-signin-heading" ><u><strong>PROSES INSERT</strong></u></h4>
                     <div class="row">
                         <div id="body"  class="col-lg-12">
                             <label>Tabel Insert Gunakan Tanda # Sebagai Pemisah</label>  <input style="font-size:15px; font-weight:bold; color:#333" type="text"  name="tbl_insert" id="tbl_insert"  class="form-control validate[required]" spellcheck="false" value="<?php echo set_value('tbl_insert');  ?>"   placeholder="Tabel Insert"  >
@@ -113,7 +115,7 @@
                     </div>
                     
                     
-                   <h4 class="form-signin-heading" ><u>PROSES UPDATE</u></h4>
+                   <h4 class="form-signin-heading" ><u><strong>PROSES UPDATE</strong></u></h4>
                     <div class="row">
                         <div id="body"  class="col-lg-12">
                             <label>Tabel Update  Gunakan Tanda # Sebagai Pemisah</label>  <input type="text"  name="tbl_update" id="tbl_update"  class="form-control validate[required]" style="font-size:15px; font-weight:bold; color:#333" value="<?php echo set_value('tbl_update');  ?>"   placeholder="Tabel Update"  >
@@ -129,7 +131,7 @@
                     
                     </div>
                     
-                    <h4 class="form-signin-heading" ><u>PROSES DELETE</u></h4>
+                    <h4 class="form-signin-heading" ><u><strong>PROSES DELETE</strong></u></h4>
                     <div class="row">
                         <div id="body"  class="col-lg-12">
                             <label>Tabel Delete  Gunakan Tanda # Sebagai Pemisah</label>  <input type="text"  name="tbl_delete" id="tbl_delete"  class="form-control" style="font-size:15px; font-weight:bold; color:#333" value="<?php echo set_value('tbl_delete');  ?>"   placeholder="Tabel Delete"  >
@@ -314,6 +316,11 @@ if (isset($view_create)) {
 		res= res.replace(/,/g, "#"); 
 		$('#id_delete').val(res);
 		})
+		$('#validasi_form').change(function(){
+		var res =$('#validasi_form').val();
+		res= res.replace(/,/g, "#"); 
+		$('#validasi_form').val(res);
+		})
 		
 
 	
@@ -381,7 +388,10 @@ if (isset($view_create)) {
 		var jml_array_lf=$('#load_field').val();
 			jml_array_lf=jml_array_lf.split('#');
 			jml_array_lf=jml_array_lf.length;
-			
+		
+		var jml_array_vf=$('#validasi_form').val();
+			jml_array_vf=jml_array_vf.split('#');
+			jml_array_vf=jml_array_vf.length;
 			
 			if(jml_array_ft!=jml_array_tf){
 				$('#form_tampil').focus();
@@ -408,6 +418,11 @@ if (isset($view_create)) {
 				
 			if(jml_array_cf!=jml_array_tf){
 				$('#tipe_field').focus();
+				alert('Jml colom tidak konsisten');
+				return false;
+				}
+			if(jml_array_ft!=jml_array_vf){
+				$('#validasi_form').focus();
 				alert('Jml colom tidak konsisten');
 				return false;
 				}

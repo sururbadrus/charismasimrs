@@ -7,42 +7,35 @@
                
 	}
 		function index(){
-			$data_header=array();$data_footer=array();$data=array();
+			$data_header=array();$data=array();
 			$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>true);
 			$data_header["edit_txt"]=true; 
 			$data_header["tampil_menu"]=$this->session->userdata('menu'); 
 			$data_header["profil"] =$this->session->userdata('profil'); 
-			$data_footer["jsku"]='pasien_js.js';
-			$data["pas_sex18"]=array(1=>'Aktif',0=>'Tidak Aktif');
-			$data["pas_agama_id18"]=$this->pasien_model->pas_agama_id18();
-			$data["pas_prop_id18"]=$this->pasien_model->pas_prop_id18();
-			$data["pas_kab_id18"]=$this->pasien_model->pas_kab_id18();
-			$data["pas_desa_id18"]=$this->pasien_model->pas_desa_id18();
-			$data["pas_kec_id18"]=$this->pasien_model->pas_kec_id18();
-			$data["pas_pendidikan_id18"]=$this->pasien_model->pas_pendidikan_id18();
-			$data["pas_pekerjaan_id18"]=$this->pasien_model->pas_pekerjaan_id18();
-			$data["pas_meninggal18"]=array(1=>'Aktif',0=>'Tidak Aktif');
-			$data["pas_identitas_id18"]=array(1=>'Aktif',0=>'Tidak Aktif');
-			$data["pas_tgl_lahir18"]=gmdate("d-m-Y",mktime(date("H")+7));	
+			$data["jsku"]='pasien_js.js';
+			$data["pas_sex47"]=array('L'=>'Laki-Laki','P'=>'Perempuan');
+			$data["pas_agama_id47"]=$this->pasien_model->pas_agama_id47();
+			$data["pas_prop_id47"]=$this->pasien_model->pas_prop_id47();
+			$data["pas_kab_id47"]=$this->pasien_model->pas_kab_id47();
+			$data["pas_desa_id47"]=$this->pasien_model->pas_desa_id47();
+			$data["pas_kec_id47"]=$this->pasien_model->pas_kec_id47();
+			$data["pas_pendidikan_id47"]=$this->pasien_model->pas_pendidikan_id47();
+			$data["pas_pekerjaan_id47"]=$this->pasien_model->pas_pekerjaan_id47();
+			$data["pas_meninggal47"]=array(1=>'Mati',0=>'Hidup');
+			$data["pas_identitas_id47"]=$this->pasien_model->pas_identitas_id47();
+			$data["pas_aktif47"]=array(1=>'Aktif',0=>'Tidak Aktif');
+			$data["pas_tgl_lahir47"]=gmdate("d-m-Y",mktime(date("H")+7));	
 				
 			$this->load->view('design/header',$data_header);
 			$this->load->view('v_pasien',$data);
-			$this->load->view('design/footer',$data_footer);
+			$this->load->view('design/footer');
 			
-		} 
-		function pas_aktif(){
-			$data=array();
-			$ftr  = $_POST['pas_aktif'];
-			$sql="select agama_id id,agama_nama nama from b_ms_agama where pas_aktif like '%".trim($ftr)."%'";
-			$hasil = $this->db->query($sql)->result_array();
-			 echo json_encode($hasil);
-		}
-			  
-		function view_grid18(){
-			return $this->pasien_model->mgrid18();
+		}  
+		function view_grid47(){
+			return $this->pasien_model->mgrid47();
 		}
 
-		function crud18() {
-			return $this->pasien_model->proses_simpan18();
+		function crud47() {
+			return $this->pasien_model->proses_simpan47();
 		}
 	}

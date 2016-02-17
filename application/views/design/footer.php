@@ -38,12 +38,7 @@
 </div><!--/.fluid-container-->
 
     
-   <?php
-    if (isset($jsku) && $jsku!='') {
-				
-                echo assets_jsku(array($jsku));
-            }
-   ?>
+   
     <script>
 	base_js="<?php echo base_url(); ?>";
 	

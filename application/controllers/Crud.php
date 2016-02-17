@@ -34,6 +34,7 @@ class Crud extends CI_Controller {
 	private	$tipe_field_a = array();
 	private	$load_field_a = array();
 	private	$join_field_form = array();
+	private $validasi_form=array();
 	
 	private	$arr_aso_hselect= array();
 	private	$arr_aso_tselect= array();
@@ -49,7 +50,7 @@ class Crud extends CI_Controller {
 	private $full_q;
 	private $tbl_pk;
     private $first_min_no = 5;
-    private $style_col = 4;
+    private $style_col = 3;
     private $auther = "Shabeeb";
     private $auther_mail = "mail@shabeebk.com";
     private $created_date;
@@ -133,6 +134,8 @@ class Crud extends CI_Controller {
 		$this->form_validation->set_rules('tipe_field', 'Tipe Field', 'required|xss_clean');
 		$this->form_validation->set_rules('load_field', 'Load Field', 'required|xss_clean');
 		$this->form_validation->set_rules('caption_field', 'Caption Field', 'required|xss_clean');
+		$this->form_validation->set_rules('validasi_form', 'Validasi form', 'required|xss_clean');
+		
 		
         if ($this->form_validation->run() === FALSE) {
             
@@ -152,8 +155,8 @@ class Crud extends CI_Controller {
 			$this->jdl_jqgrid = trim($this->input->post("jdl_jqgrid"));
 			$this->desc_asc = strtolower(trim($this->input->post("desc_asc")));
 			$this->orderby = strtolower(trim($this->input->post("orderby")));
-			
 			$this->join_s_id = explode('#',($this->hselect.'#'.$this->tselect)); 
+			$this->validasi_form = explode('#',trim($this->input->post("validasi_form")));
 			
 			$arr_aso_tselect_=array();
 			for($ub=0; $ub<count($this->a_tselect); $ub++){
@@ -200,19 +203,14 @@ class Crud extends CI_Controller {
             $this->modelname = $this->controllername . '_model';
 			$this->javascript_name=$this->controllername.'_js';
             $this->create_viewname = 'v_' . $this->controllername;
-           
-		  
-		   for($i=0; $i<count($this->tipe_field_a); $i++){
+           for($i=0; $i<count($this->tipe_field_a); $i++){
 				if(trim($this->tipe_field_a[$i])=='dd'){
-					
 					$this->dd[trim($this->form_tampil_a[$i])]=trim($this->load_field_a[$i]);
 					}
 				else if(trim($this->tipe_field_a[$i])=='dp'){
-					
 					$this->dp[]=trim($this->form_tampil_a[$i]);
 					}
 				else if(trim($this->tipe_field_a[$i])=='ac'){
-					
 					$this->ac[trim($this->form_tampil_a[$i])]=trim($this->load_field_a[$i]);
 					}
 			}
@@ -353,12 +351,12 @@ class Crud extends CI_Controller {
         $controller .= '
 	}
 		function index(){
-			$data_header=array();$data_footer=array();$data=array();
+			$data_header=array();$data=array();
 			$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>true);
 			$data_header["edit_txt"]=true; 
 			$data_header["tampil_menu"]=$this->session->userdata(\'menu\'); 
 			$data_header["profil"] =$this->session->userdata(\'profil\'); 
-			$data_footer["jsku"]=\''.$this->javascript_name.'.js\';';
+			$data["jsku"]=\''.$this->javascript_name.'.js\';';
 			
 			foreach($this->dd as $in=>$val){
 				if($val!=''){
@@ -379,7 +377,7 @@ class Crud extends CI_Controller {
 			$controller .= '
 			$this->load->view(\'design/' . trim($this->header) . '\',$data_header);
 			$this->load->view(\'' . trim($this->create_viewname) . '\',$data);
-			$this->load->view(\'design/' . trim($this->footer) . '\',$data_footer);
+			$this->load->view(\'design/' . trim($this->footer).'\');
 			';
 			}else{
 			$controller .= '
@@ -429,8 +427,7 @@ function build_view_create() {
 				<?php
 			$attributes = array(\'class\' => \'form-group\',\'name\' => \'form_'.trim($this->controllername).$this->gen_id.'\', \'id\' => \'form_'.trim($this->controllername).$this->gen_id.'\');
 		echo form_open(\'\', $attributes);
-					?>
-						';
+					?>';
 								
 			for($i=0; $i<count($this->form_hiden_a); $i++){
 		$view .= '
@@ -441,14 +438,19 @@ function build_view_create() {
 		 $view .= '						   
 		<div class="row">						   ';   
         $p = 0;
+		
 		for($i=0; $i<count($this->form_tampil_a); $i++){
+			$var_validation='';
+			if(trim($this->validasi_form[$i])=='y'){
+				$var_validation='validate[required]';
+				}
 			if(trim($this->tipe_field_a[$i])=='dd'||trim($this->tipe_field_a[$i])=='chk'||trim($this->tipe_field_a[$i])=='ta'){
 				if(trim($this->tipe_field_a[$i])=='dd'){// dropdwon
 					$view .= '   
 			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
 				<label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
 					<div class="field">
-						<?=form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control validate[required]"\')?>
+						<?=form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control '.$var_validation.'"\')?>
 							<span class="help-block"></span>
 					</div>
 			</div>';
@@ -458,7 +460,7 @@ function build_view_create() {
 			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
 				<label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
 					<div class="field" style="padding-top: 2.2%;">
-						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="' . trim($this->form_tampil_a[$i].$this->gen_id) . '" type="checkbox"  class="validate[required] " placeholder="' . ucfirst(trim($this->caption_field_a[$i])) . '"  />
+						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="' . trim($this->form_tampil_a[$i].$this->gen_id) . '" type="checkbox"  class="'.$var_validation.' " placeholder="' . ucfirst(trim($this->caption_field_a[$i])) . '"  />
 							<span class="help-block"></span>
 					</div>
 			</div>';
@@ -468,7 +470,7 @@ function build_view_create() {
 			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
 				<label>' . ucfirst(trim($this->caption_field_a[$i])) . '</label>
 					<div class="field">
-						<textarea name="'.trim($this->form_tampil_a[$i].$this->gen_id). '" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"   class="validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" ></textarea>
+						<textarea name="'.trim($this->form_tampil_a[$i].$this->gen_id). '" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"   class="'.$var_validation.' form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" ></textarea>
 							<span class="help-block"></span>
 					</div>
 			</div>';
@@ -487,11 +489,11 @@ function build_view_create() {
 					';
 					if(trim($this->tipe_field_a[$i])=='dp'){
 					$view .= '
-						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="<?=$'.trim($this->form_tampil_a[$i].$this->gen_id).'?>" />
+						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" '.$var_validation.' form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="<?=$'.trim($this->form_tampil_a[$i].$this->gen_id).'?>" />
 							<span class="help-block"></span>';
 										}else{
 					$view .= '
-						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" validate[required] form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="" />
+						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" '.$var_validation.' form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="" />
 							<span class="help-block"></span>';
 											}
 					$view .= '
@@ -525,20 +527,20 @@ function build_view_create() {
 			echo form_close();
 			?>
 		
-		 <div class="row ">   
-              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 jqGrid"  >
-             	
-            	  <table id="list2'.$this->gen_id.'"  cellpadding="0" cellspacing="0"></table>
-                	<div id="pager2'.$this->gen_id.'"></div>
-               
-          		</div>
+		 <div class="row ">
+		 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 jqGrid"  >
+			  <table id="list2'.$this->gen_id.'"  cellpadding="0" cellspacing="0"></table>
+			  <div id="pager2'.$this->gen_id.'"></div>
+			</div>
         </div>
+		</div>
+		
+		<?php
+			echo assets_jsku(array($jsku));
+		?>
+		';
 
-
-    
-		</div>';
-
-
+		
 
         return $view;
     }
@@ -640,14 +642,16 @@ function build_view_create() {
 		$data_post=$this->security->xss_clean($_POST);
 		';
 		for($i=0; $i<count($this->form_tampil_a); $i++){
+			if(trim($this->validasi_form[$i])=='y'){
 		$model .= ' 
 		$this->form_validation->set_rules(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\', \''.trim($this->caption_field_a[$i]).'\', \'required\');';
 		}
-		
+			}
 		$model .= '
 		
 		if ($this->form_validation->run() == FALSE) {';
 		for($i=0; $i<count($this->form_tampil_a); $i++){
+			if(trim($this->validasi_form[$i])=='y'){
 		$model .= '
 			if(form_error(\''.trim($this->form_tampil_a[$i]).'\')){
 				$data[\'inputerror\'][] = \''.trim($this->form_tampil_a[$i].$this->gen_id).'\';
@@ -655,6 +659,7 @@ function build_view_create() {
 				$data[\'status\'] = FALSE;
 			}
 			';
+			}
 			}
 			$model .= '
 			echo json_encode(array(\'dt\'=>$data));
@@ -668,8 +673,8 @@ function build_view_create() {
 				$arr_insr_=array();
 				$arr_insr = explode(',',strtolower(trim($this->field_insert[$i])));
 				for($iub=0; $iub<count($arr_insr); $iub++){
-					$model .= '
-					$arr_insr_[\''.trim($this->tbl_insert[$i]).'\'][\''.trim($arr_insr[$iub]).'\']=$data_post["'.trim($arr_insr[$iub].$this->gen_id).'"];';
+					$model .= '$arr_insr_[\''.trim($this->tbl_insert[$i]).'\'][\''.trim($arr_insr[$iub]).'\']=$data_post["'.trim($arr_insr[$iub].$this->gen_id).'"];
+					';
 				}
 			$model .= '
 			 $sql_q['.$i.']= $this->db->insert_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_[\''.trim($this->tbl_insert[$i]).'\']); 
@@ -679,59 +684,59 @@ function build_view_create() {
 			for($iub=0; $iub<count($sql_q); $iub++){
 				$this->db->query($sql_q[$iub]);
 			}
-				if ($this->db->trans_status() === FALSE)
-					{
+				if ($this->db->trans_status() === FALSE){
 							$this->db->trans_rollback();
 							echo json_encode(array(\'ket\'=>"Gagal Insert",\'dt\'=>$data)) ;
 					}
-					else
-					{
+					else{
 							$this->db->trans_commit();
 							echo json_encode(array(\'ket\'=>"Penambahan Data Berhasil",\'dt\'=>$data)) ;
 					}
 					break;
 				case \'Ubah\':
-					';
-					for($i=0; $i<count($this->tbl_update); $i++){
+				';
+				for($i=0; $i<count($this->tbl_update); $i++){
 				$arr_insr_=array();
 				$arr_insr = explode(',',strtolower($this->field_update[$i]));
 				for($iub=0; $iub<count($arr_insr); $iub++){
-				$model .= '$arr_insr_[\''.trim($arr_insr[$iub]).'\']=$data_post[\''.trim($arr_insr[$iub].$this->gen_id).'\'];
-				
+				$model .= '$arr_insr_[\''.trim($this->tbl_update[$i]).'\'][\''.trim($arr_insr[$iub]).'\']=$data_post[\''.trim($arr_insr[$iub].$this->gen_id).'\'];
 				';
 				}
 				$model .= '
 				$where['.$i.'] = \''.$this->id_update[$i].' =\'.$data_post[\''.trim($this->id_update[$i].$this->gen_id).'\']; 
-				$sql_q['.$i.']=  $this->db->update_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_,$where['.$i.']); 
-					 ';
-				
+				$sql_q['.$i.']=  $this->db->update_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_,$where['.$i.']); ';
 				}
 			$model .= '
 				$this->db->trans_begin();
 					for($iub=0; $iub<count($sql_q); $iub++){
 						$this->db->query($sql_q[$iub]);
 					}
-				if ($this->db->trans_status() === FALSE)
-					{
+				if ($this->db->trans_status() === FALSE){
 						$this->db->trans_rollback();
 						echo json_encode(array(\'ket\'=>"Gagal Update",\'dt\'=>$data)) ;
 					}
-					else
-					{
+					else{
 						$this->db->trans_commit();
 						echo json_encode(array(\'ket\'=>"Update Data Berhasil",\'dt\'=>$data)) ;
 					}
 					 break;
 				case \'Hapus\':
+				$this->db->trans_begin();
 				';
 				for($i=0; $i<count($this->tbl_delete); $i++){
 					$model .= '
 					$this->db->where(\''.trim($this->id_delete[$i]).'\',$data_post[\''.trim($this->id_delete[$i].$this->gen_id).'\']);
 					$this->db->delete(\''.trim($this->tbl_delete[$i]).'\');
-					 ';
-				}
-				 $model .= '
-				echo json_encode(array(\'ket\'=>"Hapus Data Berhasil",\'dt\'=>$data)) ;
+					';}
+				$model .= '
+				if ($this->db->trans_status() === FALSE){
+						$this->db->trans_rollback();
+						echo json_encode(array(\'ket\'=>"Gagal Update",\'dt\'=>$data)) ;
+					}
+					else{
+						$this->db->trans_commit();
+						echo json_encode(array(\'ket\'=>"Hapus Data Berhasil",\'dt\'=>$data)) ;
+					}
 				break;
 			}
 	}';
@@ -1051,8 +1056,7 @@ $javascript .= '
 		  }
 	}
 	$javascript .= '
-		  $("#form_'.trim($this->controllername).$this->gen_id.'").resetForm();
-		  $("#form_'.trim($this->controllername).$this->gen_id.'").clearForm();';
+		  $("#form_'.trim($this->controllername).$this->gen_id.'").resetForm();';
 		
 	$javascript .= '
 			})';

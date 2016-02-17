@@ -36,13 +36,13 @@
     <!--link href='<?php // echo base_url('assets/plugins/bower_components/colorbox/example3/colorbox.css');?>' rel='stylesheet'-->
     <!--link href='<?php // echo base_url('assets/plugins/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css');?>' rel='stylesheet'-->
     <link href='<?php echo base_url('assets/plugins/css/jquery.noty.css');?>' rel='stylesheet'>
-    <link href='<?php echo base_url('assets/plugins/css/noty_theme_default.css');?>' rel='stylesheet'>
-    <link href='<?php echo base_url('assets/plugins/css/elfinder.min.css');?>' rel='stylesheet'>
-    <link href='<?php echo base_url('assets/plugins/css/elfinder.theme.css');?>' rel='stylesheet'>
-    <link href='<?php echo base_url('assets/plugins/css/jquery.iphone.toggle.css');?>' rel='stylesheet'>
-    <link href='<?php echo base_url('assets/plugins/css/uploadify.css');?>' rel='stylesheet'>
+    <!--link href='<?php //echo base_url('assets/plugins/css/noty_theme_default.css');?>' rel='stylesheet'-->
+    <!--link href='<?php //echo base_url('assets/plugins/css/elfinder.min.css');?>' rel='stylesheet'-->
+    <!--link href='<?php //echo base_url('assets/plugins/css/elfinder.theme.css');?>' rel='stylesheet'-->
+    <!--link href='<?php //echo base_url('assets/plugins/css/jquery.iphone.toggle.css');?>' rel='stylesheet'-->
+    <!--link href='<?php //echo base_url('assets/plugins/css/uploadify.css');?>' rel='stylesheet'-->
     <link href='<?php echo base_url('assets/plugins/css/animate.min.css');?>' rel='stylesheet'>
-	<link href='<?php echo base_url('assets/plugins/css/spiner.css');?>' rel='stylesheet'>
+	<!--link href='<?php //echo base_url('assets/plugins/css/spiner.css');?>' rel='stylesheet'-->
    
     <script src="<?php echo base_url('assets/plugins/bower_components/jquery/jquery.min.js');?>"></script>
     
@@ -67,9 +67,9 @@
     <!-- tour plugin -->
     <!--script src="<?php //echo base_url('assets/plugins/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js');?>"></script-->
     <!-- star rating plugin -->
-    <script src="<?php echo base_url('assets/plugins/js/jquery.raty.min.js');?>"></script>
+    <!--script src="<?php //echo base_url('assets/plugins/js/jquery.raty.min.js');?>"></script-->
     <!-- for iOS style toggle switch -->
-    <script src="<?php echo base_url('assets/plugins/js/jquery.iphone.toggle.js');?>"></script>
+    <!--script src="<?php //echo base_url('assets/plugins/js/jquery.iphone.toggle.js');?>"></script-->
      <script src="<?php echo base_url('assets/plugins/pub/js/jquery.form.js');?>"></script>
     
     <!-- autogrowing textarea plugin -->
@@ -185,7 +185,8 @@
             <!-- theme selector ends -->
 
             <ul class="collapse navbar-collapse nav navbar-nav top-menu">
-                <li><a href="<?php base_url('crud')?>"><i class="glyphicon glyphicon-home"></i><strong> CRUD</strong></a></li>
+                <li><a href="<?php base_url('crud')?>"><i class="glyphicon glyphicon-home"></i><strong> Crud</strong></a></li>
+                 <li><a href="<?php base_url('buar_tab')?>"><i class="glyphicon glyphicon-home"></i><strong> Buat Tab</strong></a></li>
                 <!--li class="dropdown">
                     <a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-book"></i> <strong>Master Data </strong><span
                             class="caret"></span></a>

@@ -1,6 +1,6 @@
 $(document).ready(function () {
-		var mygrid18=jQuery("#list218").jqGrid({
-					url: base_js+"/index.php/pasien/view_grid18", 
+		var mygrid47=jQuery("#list247").jqGrid({
+					url: base_js+"/index.php/pasien/view_grid47", 
 					datatype: "json", 
 					height: "300", 
 					//postData: { id: '0' },
@@ -22,7 +22,7 @@ $(document).ready(function () {
 					
 					rowNum: 20,
 					rowList: [20,30,50],
-					pager: '#pager218',
+					pager: '#pager247',
 					sortname: 'pas_nama',
 					viewrecords: true,
 					sortorder: "asc",
@@ -35,39 +35,39 @@ $(document).ready(function () {
             			responsive_jqgrid($(".jqGrid"));
         			}				
 				});
-		jQuery("#list218").jqGrid('navGrid','#pager218',{view:false,edit:false,add:false,del:false,search:false,refresh:true});
-		jQuery("#list218").jqGrid('navButtonAdd',"#pager218",{caption:"Cari",title:"Cari", buttonicon :'ui-icon-search', onClickButton:function(){ mygrid18[0].toggleToolbar() } }); 
-		jQuery("#list218").jqGrid('filterToolbar',{
+		jQuery("#list247").jqGrid('navGrid','#pager247',{view:false,edit:false,add:false,del:false,search:false,refresh:true});
+		jQuery("#list247").jqGrid('navButtonAdd',"#pager247",{caption:"Cari",title:"Cari", buttonicon :'ui-icon-search', onClickButton:function(){ mygrid47[0].toggleToolbar() } }); 
+		jQuery("#list247").jqGrid('filterToolbar',{
             stringResult: true,
             searchOnEnter : true
         });
-		mygrid18[0].toggleToolbar();
-		jQuery("#list218").setGridParam({onSelectRow:function(id){
-		var data_18=id.split(',');
-			$('#simpandata18').val('Ubah');
-			$("#pas_no_rm18").val(jQuery("#list218").jqGrid('getCell',id,'pas_no_rm'));
-			$("#pas_nama18").val(jQuery("#list218").jqGrid('getCell',id,'pas_nama'));
-			$("#pas_sex18").val(jQuery("#list218").jqGrid('getCell',id,'pas_sex'));
-			$("#pas_tempat_lahir18").val(data_18[1]);
-			$("#pas_tgl_lahir18").val(jQuery("#list218").jqGrid('getCell',id,'pas_tgl_lahir'));
-			$("#pas_alamat18").val(jQuery("#list218").jqGrid('getCell',id,'pas_alamat'));
-			$("#pas_agama_id18").val(data_18[2]);
-			$("#pas_rt18").val(jQuery("#list218").jqGrid('getCell',id,'pas_rt'));
-			$("#pas_rw18").val(jQuery("#list218").jqGrid('getCell',id,'pas_rw'));
-			$("#pas_ortu18").val(jQuery("#list218").jqGrid('getCell',id,'pas_ortu'));
-			$("#pas_prop_id18").val(data_18[6]);
-			$("#pas_kab_id18").val(data_18[5]);
-			$("#pas_desa_id18").val(data_18[3]);
-			$("#pas_kec_id18").val(data_18[4]);
-			$("#pas_pendidikan_id18").val(data_18[7]);
-			$("#pas_pekerjaan_id18").val(data_18[8]);
-			$("#pas_telp18").val(jQuery("#list218").jqGrid('getCell',id,'pas_telp'));
-			$("#pas_meninggal18").val(data_18[9]);
-			$("#pas_no_rm_lm18").val(data_18[10]);
-			$("#pas_identitas_id18").val(data_18[11]);
-			$("#pas_no_identitas18").val(jQuery("#list218").jqGrid('getCell',id,'pas_no_identitas'));
-			$("#pas_aktif18").val(data_18[0]);
-			$("#pas_id18").val(data_18[14]);
+		mygrid47[0].toggleToolbar();
+		jQuery("#list247").setGridParam({onSelectRow:function(id){
+		var data_47=id.split(',');
+			$('#simpandata47').val('Ubah');
+			$("#pas_no_rm47").val(jQuery("#list247").jqGrid('getCell',id,'pas_no_rm'));
+			$("#pas_nama47").val(jQuery("#list247").jqGrid('getCell',id,'pas_nama'));
+			$("#pas_sex47").val(jQuery("#list247").jqGrid('getCell',id,'pas_sex'));
+			$("#pas_tempat_lahir47").val(data_47[1]);
+			$("#pas_tgl_lahir47").val(jQuery("#list247").jqGrid('getCell',id,'pas_tgl_lahir'));
+			$("#pas_alamat47").val(jQuery("#list247").jqGrid('getCell',id,'pas_alamat'));
+			$("#pas_agama_id47").val(data_47[2]);
+			$("#pas_rt47").val(jQuery("#list247").jqGrid('getCell',id,'pas_rt'));
+			$("#pas_rw47").val(jQuery("#list247").jqGrid('getCell',id,'pas_rw'));
+			$("#pas_ortu47").val(jQuery("#list247").jqGrid('getCell',id,'pas_ortu'));
+			$("#pas_prop_id47").val(data_47[6]);
+			$("#pas_kab_id47").val(data_47[5]);
+			$("#pas_desa_id47").val(data_47[3]);
+			$("#pas_kec_id47").val(data_47[4]);
+			$("#pas_pendidikan_id47").val(data_47[7]);
+			$("#pas_pekerjaan_id47").val(data_47[8]);
+			$("#pas_telp47").val(jQuery("#list247").jqGrid('getCell',id,'pas_telp'));
+			$("#pas_meninggal47").val(data_47[9]);
+			$("#pas_no_rm_lm47").val(data_47[10]);
+			$("#pas_identitas_id47").val(data_47[11]);
+			$("#pas_no_identitas47").val(jQuery("#list247").jqGrid('getCell',id,'pas_no_identitas'));
+			$("#pas_aktif47").val(data_47[0]);
+			$("#pas_id47").val(data_47[14]);
 			} 
 					});  
 		 function responsive_jqgrid(jqgrid) {
@@ -93,23 +93,27 @@ $(document).ready(function () {
 			});
 		
 		
-		$("#form_pasien18").validationEngine({promptPosition : "topRight", scroll: false});
-		$("#simpandata18").click(function(){
-			$("#h_form18").val($("#simpandata18").val());
-			$("#form_pasien18").trigger("submit");
+		$("#form_pasien47").validationEngine({promptPosition : "topRight", scroll: false});
+		$("#simpandata47").click(function(){
+			$("#h_form47").val($("#simpandata47").val());
+			$("#form_pasien47").trigger("submit");
 		})
-		$("#hpus18").click(function(){
-			$("#h_form18").val($("#hpus18").val())
-			$("#form_pasien18").trigger("submit");
+		$("#hpus47").click(function(){
+			$("#h_form47").val($("#hpus47").val())
+			$("#form_pasien47").trigger("submit");
 		});
-		$("#form_pasien18").submit(function() { 
-			var act=$("#h_form18").val();
+		$("#form_pasien47").submit(function() { 
+			var act=$("#h_form47").val();
 			$(this).ajaxSubmit({
 			data:{"act":act},
 			beforeSubmit:  function (formData, jqForm, options) { 
-							if($("#form_pasien18").validationEngine("validate")){
+							if($("#form_pasien47").validationEngine("validate")){
 								var conf = confirm("Yakin Akan "+act+" Data Ini?");
-								if(conf) return true; else return false;
+								if(conf) {
+								$('#curtain').css('display','block');
+								return true;
+								
+								} else return false;
 							}else{
 								return false;
 							}
@@ -117,9 +121,9 @@ $(document).ready(function () {
 			success:       function(data)  {
 							if(data.dt.status) 
 							{
-								$("#simpandata18").val("Simpan");
-								jQuery("#list218").trigger("reloadGrid");
-								$("#batal18").trigger('click');
+								$("#simpandata47").val("Simpan");
+								jQuery("#list247").trigger("reloadGrid");
+								$("#batal47").trigger('click');
 								alert(data.ket);
 								}
 							else
@@ -130,10 +134,10 @@ $(document).ready(function () {
 									$('[name="'+data.dt.inputerror[i]+'"]').next().text(data.dt.error_string[i]); 
 								}
 							}
-							
+							$('#curtain').css('display','none');
 						} ,
 	 
-			url:base_js+'index.php/pasien/crud18',
+			url:base_js+'index.php/pasien/crud47',
 			type:"post",       
 			dataType:"JSON",
 			});
@@ -142,26 +146,27 @@ $(document).ready(function () {
 			
 			
 		
-		$("#batal18").click(function(){
+		$("#batal47").click(function(){
 			
-			$("#form_pasien18").validationEngine('hideAll');
-			$('#simpandata18').val('Simpan');
-			$("#h_form18").val("")
-			$('#pas_id18').val('');
-		  $("select#pas_sex18").prop('selectedIndex', 0);
-		  $("select#pas_agama_id18").prop('selectedIndex', 0);
-		  $("select#pas_prop_id18").prop('selectedIndex', 0);
-		  $("select#pas_kab_id18").prop('selectedIndex', 0);
-		  $("select#pas_desa_id18").prop('selectedIndex', 0);
-		  $("select#pas_kec_id18").prop('selectedIndex', 0);
-		  $("select#pas_pendidikan_id18").prop('selectedIndex', 0);
-		  $("select#pas_pekerjaan_id18").prop('selectedIndex', 0);
-		  $("select#pas_meninggal18").prop('selectedIndex', 0);
-		  $("select#pas_identitas_id18").prop('selectedIndex', 0);
-		  $("#form_pasien18").resetForm();
-		  $("#form_pasien18").clearForm();
+			$("#form_pasien47").validationEngine('hideAll');
+			$('#simpandata47').val('Simpan');
+			$("#h_form47").val("")
+			$('#pas_id47').val('');
+		  $("select#pas_sex47").prop('selectedIndex', 0);
+		  $("select#pas_agama_id47").prop('selectedIndex', 0);
+		  $("select#pas_prop_id47").prop('selectedIndex', 0);
+		  $("select#pas_kab_id47").prop('selectedIndex', 0);
+		  $("select#pas_desa_id47").prop('selectedIndex', 0);
+		  $("select#pas_kec_id47").prop('selectedIndex', 0);
+		  $("select#pas_pendidikan_id47").prop('selectedIndex', 0);
+		  $("select#pas_pekerjaan_id47").prop('selectedIndex', 0);
+		  $("select#pas_meninggal47").prop('selectedIndex', 0);
+		  $("select#pas_identitas_id47").prop('selectedIndex', 0);
+		  $("select#pas_aktif47").prop('selectedIndex', 0);
+		  $("#form_pasien47").resetForm();
+		  //$("#form_pasien47").clearForm();
 			})
-		$("#pas_tgl_lahir18").datetimepicker({
+		$("#pas_tgl_lahir47").datetimepicker({
 				language:  "id",
 				format:"dd-mm-yyyy",
 				autoclose:1,
@@ -172,34 +177,5 @@ $(document).ready(function () {
 					if($(this).val()!=""){
 						//alert("");
 						}
-				 }); 
-		$('#pas_aktif18').typeahead({
-			onSelect: function(item) {
-				 $('#hdiag').val(item.value);
-			},
-			ajax: {
-				url: base_js+"/index.php/pasien/pas_aktif",
-				timeout: 500,
-				triggerLength: 1,
-				method: "post",
-				loadingClass: "loading-circle",
-				preDispatch: function (query) {
-					return {
-						search: query
-					}
-				},
-				preProcess: function (data) {
-					//showLoadingMask(false);
-					if (data.success === false) {
-						// Hide the list, there was some error
-						return false;
-					}
-					// We good!
-					return data;
-				}
-			}
-		});
-			
-			
-			
+				 });
 		})
