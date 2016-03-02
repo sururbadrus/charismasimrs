@@ -47,7 +47,7 @@
                     if (isset($controller)) {
                         ?>
                         <h3> Controller</h3><h4><?php echo $controllername . '.php'; ?></h4>
-                        <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
+                        <textarea class="textarea" spellcheck="false" rows="28" cols="50" style="width: 100%;">
                             <?php echo $controller; ?>
                         </textarea> 
                         <?php } ?>
@@ -60,13 +60,20 @@
 if (isset($view_create)) {
     ?>
                         <h3>View</h3> <h4><?php echo $create_viewname . '.php'; ?></h4>
-                        <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
+                        <textarea class="textarea" spellcheck="false" rows="28" cols="50" style="width: 100%;">
                         <?php echo $view_create; ?>
                         </textarea> 
                         <?php } ?>
 
                   
-
+				 <?php
+                    if (isset($javascript)) {
+                        ?>
+                        <h3>Javas Cript</h3>  <h4><?php echo $javascript_name . '.php'; ?></h4>
+                        <textarea class="textarea" spellcheck="false" rows="28" cols="50" style="width: 100%;">
+                        <?php echo $javascript; ?>
+                        </textarea> 
+<?php } ?>
 
                     
 

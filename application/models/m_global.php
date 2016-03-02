@@ -1,15 +1,23 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class M_global extends CI_Model {
+	public $billing='billing';
+	public $kepegawaian='kepegawaian';
+	public $apotek='apotek';
 	private $tree;
 	private $ub='';
 	function __construct() {
         parent::__construct();
+		
     }
 	function total_row($q) {
 		$query = $this->db->query($q);
         return $query->num_rows(); 
     }
 	
+	function konversi_rupah($rp){
+		$rupiah=explode(',',$rp);
+		return str_replace('.','',$rupiah[0]);
+		}
 	
 	function getcombo($sq='',$uk)
 	 {
@@ -21,9 +29,9 @@ class M_global extends CI_Model {
 		 
 		 if ($query->num_rows()> 0){
 			 if(isset($uk) && $uk=='a') 
-			 {				
+			 {
 				 $data[''] = '- Semua -';
-			 }elseif(isset($uk) && $uk=='p'){$data[''] = '- Pilih -';}
+			 }elseif(isset($uk) && $uk=='p'){$data['0'] = '- Pilih -';}
 			 foreach ($query->result_array() as $row)
 			 {
 			 	$data[$row['id']] = $row['nama'];
@@ -50,7 +58,7 @@ class M_global extends CI_Model {
 			 if(isset($uk) && $uk=='a') 
 			 {				
 				$hasil="<option value=''>-Semua-</option>";
-			 }elseif(isset($uk) && $uk=='p'){$hasil="<option value=''>-Pilih-</option>";}
+			 }elseif(isset($uk) && $uk=='p'){$hasil="<option value='0'>-Pilih-</option>";}
 			
 			foreach($query->result_array() as $row){
 			$hasil.="<option value='".$row['id']."'>".$row['nama']."</option>";
@@ -74,6 +82,10 @@ class M_global extends CI_Model {
 	   $t=$t[2].'-'.$t[1].'-'.$t[0];
 	   return $t;
 	}
+	function hitung_umur($awal,$akhir){
+		$diff=date_diff(date_create($awal),date_create($akhir));
+		return $diff->format("%D-%M-%Y");
+		}
 	function tampil_tahun($q){
 		$data = array();
 		$awal=$q-5;
@@ -108,8 +120,8 @@ class M_global extends CI_Model {
 
 				}
 				
-				if ($element['parent_id'] == $parentId) {
-					$children = $this->buildTree($elements, $element['id'],$checkbox);
+				if ($element['menu_parent_id'] == $parentId) {
+					$children = $this->buildTree($elements, $element['menu_id'],$checkbox);
 					if ($children) {
 						$element['children'] = $children;
 					}
@@ -120,7 +132,21 @@ class M_global extends CI_Model {
 			return $branch;
 		}
 		
+		function build_menu(array $elements, $parentId = 0,$checkbox=false) {
+			$branch = array();
+			foreach ($elements as $element) {
+
+				if ($element['menu_parent_id'] == $parentId) {
+					$children = $this->build_menu($elements, $element['menu_id'],$checkbox);
+					if ($children) {
+						$element['children'] = $children;
+					}
+					$branch[] = $element;
+				}
+			}
 		
+			return $branch;
+		}
 		
 		function array_view($q) {
 		
@@ -133,25 +159,19 @@ class M_global extends CI_Model {
 		}
 	
 		function tampil_header(){
-			if($this->session->userdata('logged_in')){
-			$q="SELECT d_menu.menu_id id, d_menu.menu nama, d_menu.menu_link url, d_menu.parent_id FROM d_menu WHERE (d_menu.aktif =1 and d_menu.hak_akses ='".$this->session->userdata('hak_akses_user')."') order by kode";
-			}else{
-				$q="SELECT d_menu.menu_id id, d_menu.menu nama, d_menu.menu_link url, d_menu.parent_id FROM d_menu WHERE (d_menu.aktif =1 and d_menu.hak_akses ='1') order by kode";
-				
-				}
+			
+			$q="SELECT sps_ms_menu.menu_id , sps_ms_menu.menu_nama , sps_ms_menu.menu_url , sps_ms_menu.menu_parent_id  FROM sps_ms_menu INNER JOIN sps_ms_group_akses ON sps_ms_menu.menu_id=sps_ms_group_akses.grp_akses_menu_id WHERE 
+(sps_ms_menu.menu_aktif =1 AND sps_ms_group_akses.grp_akses_group_id ='".$this->session->userdata('user_group_id')."') ORDER BY menu_kode";
+		
 			$q1= $this->array_view($q);
-			$q2= $this->map_menu($q1);
-			return $this->display_tree_menu($q2);
+			return $this->map_menu($q1);
 			
 			}
 		function map_menu(array $elements, $parentId = 0) {
 			$tree = array();
 			foreach ($elements as $element) {
-
-			
-				
-				if ($element['parent_id'] == $parentId) {
-					$children = $this->buildTree($elements, $element['id']);
+				if ($element['menu_parent_id'] == $parentId) {
+					$children = $this->build_menu($elements, $element['menu_id']);
 					if ($children) {
 						$element['children'] = $children;
 					}
@@ -174,7 +194,7 @@ class M_global extends CI_Model {
 				if (isset($node['children'])){
 					if($indent==0){
 					$this->ub.= "<li class='dropdown'>";
-					$this->ub.= "<a href='' class='dropdown-toggle'  data-toggle='dropdown'><!--<i class='glyphicon glyphicon-plus'></i>--><strong>".$node['nama']."</strong><span
+					$this->ub.= "<a href='' class='dropdown-toggle'  data-toggle='dropdown'><!--<i class='glyphicon glyphicon-plus'></i>--><strong>".$node['menu_nama']."</strong><span
                             class='caret'></span></a>";
 					
 					$this->display_tree_menu($node['children'],1);
@@ -182,7 +202,7 @@ class M_global extends CI_Model {
 					}
 					else{
 						$this->ub.= "<li class='dropdown-submenu'>";
-					$this->ub.= "<a href='#' class='dropdown-toggle' data-toggle='dropdown'><strong>".$node['nama']."</strong></a>";
+					$this->ub.= "<a href='#' class='dropdown-toggle' data-toggle='dropdown'><strong>".$node['menu_nama']."</strong></a>";
 					
 					$this->display_tree_menu($node['children'],1);
 					$this->ub.= "</li>";
@@ -192,12 +212,12 @@ class M_global extends CI_Model {
 				}else{
 					if($indent==0){
 					$this->ub.= "<li>";
-					$this->ub.= "<a href=".site_url($node['url'])."><!--<i class='glyphicon glyphicon-home'></i>--><strong>".$node['nama']."</strong></a>";
+					$this->ub.= "<a  href=".site_url($node['menu_url'])."><!--<i class='glyphicon glyphicon-home'></i>--><strong>".$node['menu_nama']."</strong></a>";
 					$this->ub.= "</li>";
 					}else{
 						
 					$this->ub.= "<li>";
-					$this->ub.= "<a href=".site_url($node['url']).">".$node['nama']."</a>";
+					$this->ub.= "<a href=".site_url($node['menu_url'])."><strong>".$node['menu_nama']."</strong></a>";
 					$this->ub.= "</li>";
 						
 						}
@@ -210,5 +230,5 @@ class M_global extends CI_Model {
 			
 			return  $this->ub;
 		}
-
+	
 }

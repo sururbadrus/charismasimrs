@@ -163,7 +163,7 @@
                     if (isset($model)) {
                         ?>
                         <h3> Model</h3><h4><?php echo $modelname . '.php'; ?></h4>
-                        <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
+                        <textarea class="textarea" spellcheck="false" rows="28" cols="50" style="width: 100%;">
                             <?php echo $model; ?>
                         </textarea> 
                     <?php } ?>
@@ -175,7 +175,7 @@
                     if (isset($controller)) {
                         ?>
                         <h3> Controller</h3><h4><?php echo $controllername . '.php'; ?></h4>
-                        <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
+                        <textarea class="textarea" spellcheck="false" rows="28" cols="50" style="width: 100%;">
                             <?php echo $controller; ?>
                         </textarea> 
                         <?php } ?>
@@ -197,7 +197,7 @@ if (isset($view_create)) {
                     if (isset($javascript)) {
                         ?>
                         <h3>Javas Cript</h3>  <h4><?php echo $javascript_name . '.php'; ?></h4>
-                        <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
+                        <textarea class="textarea" spellcheck="false" rows="28" cols="50" style="width: 100%;">
                         <?php echo $javascript; ?>
                         </textarea> 
 <?php } ?>
@@ -207,7 +207,7 @@ if (isset($view_create)) {
                     if (isset($view_header)) {
                         ?>
                         <h3>Header structure</h3><h4><?php echo $header . '.php'; ?></h4>
-                        <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
+                        <textarea class="textarea" rows="28" spellcheck="false" cols="50" style="width: 100%;">
                         <?php echo $view_header; ?>
                         </textarea> 
                     <?php } ?>
@@ -216,7 +216,7 @@ if (isset($view_create)) {
                         if (isset($view_footer)) {
                             ?>
                         <h3>List Form</h3><h4><?php echo $footer . '.php'; ?></h4>
-                        <textarea class="textarea" rows="28" cols="50" style="width: 100%;">
+                        <textarea class="textarea" rows="28" spellcheck="false" cols="50" style="width: 100%;">
                         <?php echo $view_footer; ?>
                         </textarea> 
                     <?php } ?>

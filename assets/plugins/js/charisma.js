@@ -136,21 +136,21 @@ function docReady() {
     });
 
     //notifications
-    $('.noty').click(function (e) {
-        e.preventDefault();
-        var options = $.parseJSON($(this).attr('data-noty-options'));
-        noty(options);
-    });
-
-    //chosen - improves select
-    $('[data-rel="chosen"],[rel="chosen"]').chosen();
-
-    //tabs
-    $('#myTab a:first').tab('show');
-    $('#myTab a').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
+    //$('.noty').click(function (e) {
+//        e.preventDefault();
+//        var options = $.parseJSON($(this).attr('data-noty-options'));
+//        noty(options);
+//    });
+//
+//    //chosen - improves select
+//    $('[data-rel="chosen"],[rel="chosen"]').chosen();
+//
+//    //tabs
+//    $('#myTab a:first').tab('show');
+//    $('#myTab a').click(function (e) {
+//        e.preventDefault();
+//        $(this).tab('show');
+//    });
 
 
     //tooltip
@@ -163,12 +163,12 @@ function docReady() {
     $('[data-toggle="popover"]').popover();
 
     //iOS / iPhone style toggle switch
-    $('.iphone-toggle').iphoneStyle();
+    //$('.iphone-toggle').iphoneStyle();
 
-    //star rating
-    $('.raty').raty({
-        score: 4 //default stars
-    });
+    ///star rating
+  //  $('.raty').raty({
+       // score: 4 //default stars
+   // });
 
     //uploadify - multiple uploads
    // $('#file_upload').uploadify({

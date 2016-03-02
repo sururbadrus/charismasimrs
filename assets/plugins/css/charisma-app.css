@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Shojumaru);
+/*@import url(https://fonts.googleapis.com/css?family=Shojumaru);*/
 
 select {
     background-color: #fff;
@@ -6,7 +6,9 @@ select {
 
 .ch-container {
     padding: 0 15px;
-	min-height:900px;
+	margin-left:50px;
+	margin-right:50px;
+	
 }
 
 .top-block {

@@ -9,20 +9,10 @@ class App_auth{
 	    if(!isset($this->CI->session))  //Check if session lib is loaded or not
           $this->CI->load->library('session');  //If not loaded, then load it here
       	$this->CI->load->helper('url');
-		//die;
-		
-		
-		
 		
      }    
     
     function index() {
-		//untuk menu
-		//$newdata = array('ubet'=>array(
-//						'username'  => 'johndoe',
-//						'email'     => 'johndoe@some-site.com',
-//						));
-//		$this->CI->session->set_userdata($newdata);
 		
          $router =& load_class('Router', 'core');
          $controller = $router->fetch_class();
@@ -35,7 +25,12 @@ class App_auth{
 				}else{
 					redirect(base_url('login'));
 				}
-			}  
+			}else{
+				if($this->CI->input->is_ajax_request()){
+					//var_dump($_REQUEST); die;
+				}
+				
+				}  
 		
 		 }
     }

@@ -172,7 +172,7 @@
 		
    <div class="row">
         <div class="col-md-12 center login-header">
-            <h2>APLIKASI SIMRS</h2>
+            <h2>APLIKASI SIMRS </h2>
         </div>
         <!--/span-->
     </div><!--/row-->
@@ -186,7 +186,7 @@
                 <fieldset>
                     <div class="input-group input-group-lg">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope red"></i></span>
-                        <input type="email" name="usermail" class="form-control" placeholder="Email">
+                        <input type="text" name="usermail" class="form-control" placeholder="User Name">
                     </div>
                     <div class="clearfix"></div><br>
 

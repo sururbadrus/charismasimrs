@@ -16,7 +16,7 @@
         ===
     -->
     <meta charset="utf-8">
-    <title>SIMRS</title>
+    <title>APP SIMRS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
     <meta name="author" content="SururBadrus">
@@ -32,17 +32,17 @@
     <link href="<?php echo base_url('assets/plugins/css/charisma-app.css');?>" rel="stylesheet">
    <!-- <link href='<?php //echo base_url('assets/plugins/bower_components/fullcalendar/dist/fullcalendar.css');?>' rel='stylesheet'>
     <link href='<?php // echo base_url('assets/plugins/bower_components/fullcalendar/dist/fullcalendar.print.css');?>' rel='stylesheet' media='print'>-->
-    <link href='<?php echo base_url('assets/plugins/bower_components/chosen/chosen.min.css')?>' rel='stylesheet'>
+    <!--link href='<?php //echo base_url('assets/plugins/bower_components/chosen/chosen.min.css')?>' rel='stylesheet'-->
     <!--link href='<?php // echo base_url('assets/plugins/bower_components/colorbox/example3/colorbox.css');?>' rel='stylesheet'-->
     <!--link href='<?php // echo base_url('assets/plugins/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css');?>' rel='stylesheet'-->
-    <link href='<?php echo base_url('assets/plugins/css/jquery.noty.css');?>' rel='stylesheet'>
+    <!--link href='<?php //echo base_url('assets/plugins/css/jquery.noty.css');?>' rel='stylesheet'-->
     <!--link href='<?php //echo base_url('assets/plugins/css/noty_theme_default.css');?>' rel='stylesheet'-->
     <!--link href='<?php //echo base_url('assets/plugins/css/elfinder.min.css');?>' rel='stylesheet'-->
     <!--link href='<?php //echo base_url('assets/plugins/css/elfinder.theme.css');?>' rel='stylesheet'-->
     <!--link href='<?php //echo base_url('assets/plugins/css/jquery.iphone.toggle.css');?>' rel='stylesheet'-->
     <!--link href='<?php //echo base_url('assets/plugins/css/uploadify.css');?>' rel='stylesheet'-->
-    <link href='<?php echo base_url('assets/plugins/css/animate.min.css');?>' rel='stylesheet'>
-	<!--link href='<?php //echo base_url('assets/plugins/css/spiner.css');?>' rel='stylesheet'-->
+    <!--link href='<?php //echo base_url('assets/plugins/css/animate.min.css');?>' rel='stylesheet'-->
+	<link href='<?php echo base_url('assets/plugins/css/spiner.css');?>' rel='stylesheet'>
    
     <script src="<?php echo base_url('assets/plugins/bower_components/jquery/jquery.min.js');?>"></script>
     
@@ -57,11 +57,11 @@
     <!--script src='<?php //echo base_url('assets/plugins/js/jquery.dataTables.min.js');?>'></script-->
     
     <!-- select or dropdown enhancer -->
-    <script src="<?php echo base_url('assets/plugins/bower_components/chosen/chosen.jquery.min.js');?>"></script>
+    <!--script src="<?php //echo base_url('assets/plugins/bower_components/chosen/chosen.jquery.min.js');?>"></script-->
     <!-- plugin for gallery image view -->
     <!--script src="<?php //echo base_url('assets/plugins/bower_components/colorbox/jquery.colorbox-min.js');?>"></script-->
     <!-- notification plugin -->
-    <script src="<?php echo base_url('assets/plugins/js/jquery.noty.js');?>"></script>
+    <!--script src="<?php //echo base_url('assets/plugins/js/jquery.noty.js');?>"></script-->
     <!-- library for making tables responsive -->
     <!--script src="<?php //echo base_url('assets/plugins/bower_components/responsive-tables/responsive-tables.js');?>"></script-->
     <!-- tour plugin -->
@@ -78,6 +78,7 @@
     <!--script src="<?php //echo base_url('assets/plugins/js/jquery.uploadify-3.1.min.js');?>"></script-->
     <!-- history.js for cross-browser state change on ajax -->
     <!--script src="<?php //echo base_url('assets/plugins/js/jquery.history.js');?>"></script-->
+     <script src="<?php echo base_url('assets/plugins/js/sb-admin.js');?>"></script>
     <!-- application script for Charisma demo -->
     
     
@@ -106,13 +107,13 @@
             }
 			
 			if (isset($valid) && $valid==true) {
-				echo assets_css(array('pub/css/validate_engine.css'));
-                echo assets_js(array('pub/js/validate_engine_eng.js','pub/js/validate_engine.js'));
+				echo assets_css(array('pub/css/validationEngine.jquery.css'));
+                echo assets_js(array('pub/js/languages/jquery.validationEngine-id.js','pub/js/jquery.validationEngine.js'));
            
 			}
 			
 			if (isset($tree) && $tree==true) {
-				echo assets_css(array('pub/css/skin/ui.dynatree.css','pub/css/jquery-ui-1.8.21.custom.css'));
+				echo assets_css(array('pub/css/skin-vista/ui.dynatree.css','pub/css/girlly/jquery-ui-1.10.3.custom.min.css'));
                 echo assets_js(array('pub/js/jquery-ui-1.10.3.custom.min.js','pub/js/jquery.dynatree.min.js'));
             }
 			
@@ -120,6 +121,10 @@
 				echo assets_css(array('pub/css/font.min.css','pub/css/editor.css'));
                 echo assets_js(array('pub/js/editor.js'));
             }
+			if (isset($money) && $money==true) {
+				echo assets_js(array('pub/js/jquery.maskMoney.min.js'));
+            }
+			
 			
 			
 	
@@ -136,7 +141,7 @@
 
 </head>
 
-<body class="preloader3 ">
+<body class="preloader3">
 
 <div id="preloader" style="position: fixed; width: 100%; height: 100%;">
     <div class="spinner">
@@ -184,19 +189,19 @@
            
             <!-- theme selector ends -->
 
-            <ul class="collapse navbar-collapse nav navbar-nav top-menu">
-                <li><a href="<?php base_url('crud')?>"><i class="glyphicon glyphicon-home"></i><strong> Crud</strong></a></li>
-                 <li><a href="<?php base_url('buar_tab')?>"><i class="glyphicon glyphicon-home"></i><strong> Buat Tab</strong></a></li>
+            <!--ul class="collapse navbar-collapse nav navbar-nav top-menu"-->
+                <!--li><a href="<?php //echo base_url('crud')?>"><i class="glyphicon glyphicon-home"></i><strong> Crud</strong></a></li-->
+                 <!--li><a href="<?php //echo base_url('buat_tab')?>"><i class="glyphicon glyphicon-home"></i><strong> Buat Tab</strong></a></li-->
                 <!--li class="dropdown">
                     <a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-book"></i> <strong>Master Data </strong><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="<?php echo base_url('kategori');?>">Kategori</a></li>
-                        <li><a href="<?php echo base_url('seksi');?>">Seksi</a></li>
-                        <li><a href="<?php echo base_url('curr');?>">Currency</a></li>
+                        <li><a href="<?php //echo base_url('kategori');?>">Kategori</a></li>
+                        <li><a href="<?php //echo base_url('seksi');?>">Seksi</a></li>
+                        <li><a href="<?php //echo base_url('curr');?>">Currency</a></li>
                         <li class="divider"></li>
                         
-                        <li><a href="<?php echo base_url('kota');?>">Kabupaten Kota</a></li>
+                        <li><a href="<?php //echo base_url('kota');?>">Kabupaten Kota</a></li>
                         
                     </ul>
                 </li>
@@ -224,16 +229,18 @@
                         
                     </ul>
                 </li-->
-                
-            </ul>
+                <?php
+                echo $tampil_menu;
+				?>
+            <!--/ul-->
 
         </div>
     </div>
     <!-- topbar ends -->
 
-<div class="ch-container">
+<div class="ch-container chheight">
     <div class="row">
-    	<div class="col-sm-1 col-lg-1">
+    	<div class="">
             <div class="sidebar-nav">
                 <div class="nav-canvas">
                     <div class="nav-sm nav nav-stacked">
@@ -246,7 +253,7 @@
                 </div>
             </div>
         </div>        
-        <div id="content" class="col-xs-12 col-lg-10 col-md-10 col-sm-12">
+        <div id="ch-container" >
 
 
 		

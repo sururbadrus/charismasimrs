@@ -22,7 +22,9 @@ class Buat_tab extends CI_Controller {
 	private $library_list = array("form_validation", "session");
     private $helper_list = array("url","array");
 	private $gen_id = '';
-
+	private $js = '';
+	private $javascript_name;
+	private $data_viewdefault='';
     public function __construct() {
 
         parent::__construct();
@@ -41,7 +43,7 @@ class Buat_tab extends CI_Controller {
 
     
     public function index() {
-
+		$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>true);
         $data = '';
         $this->form_validation->set_rules('cname', 'Controller Name', 'required|xss_clean');
         $this->form_validation->set_rules('link_tab', 'Tab List', 'required|xss_clean');
@@ -60,21 +62,80 @@ class Buat_tab extends CI_Controller {
 			$this->create_viewname = 'v_'.str_replace(' ', '_', $cname);
             $data['controllername'] = $this->controllername;
             $data['create_viewname'] = $this->create_viewname;
-			
+			$this->javascript_name=$this->controllername.'_js';
 			$this->controller_data = $controller = $this->build_controller();
             $this->create_data = $view_create = $this->build_view_create();
+			 $this->js = $javascript = trim($this->build_javascript());
 			
 			
             $data['controller'] = $controller;
             $data['view_create'] = $view_create;
+			 $data['javascript'] = $javascript;
+		  $data['javascript_name'] = trim($this->javascript_name);
            
             if (isset($_POST['download'])) {
               
-                $this->download();
+                
+              
+                $this->load->helper('file');
+				$path = "./application/modules/".trim($this->controllername);
+				if(!is_dir($path)) //create the folder if it's not already exists
+				{
+				  mkdir($path,0755,TRUE);
+				} 
+				$path = "./application/modules/".trim($this->controllername)."/controllers";
+				if(!is_dir($path)) //create the folder if it's not already exists
+				{
+				  mkdir($path,0755,TRUE);
+				}
+				$path = "./application/modules/".trim($this->controllername)."/models";
+				if(!is_dir($path)) //create the folder if it's not already exists
+				{
+				  mkdir($path,0755,TRUE);
+				}
+				
+				$path = "./application/modules/".trim($this->controllername)."/views";
+				if(!is_dir($path)) //create the folder if it's not already exists
+				{
+				  mkdir($path,0755,TRUE);
+				} 
+				
+				
+				$data = $this->controller_data;
+		
+				if ( ! write_file('./application/modules/'.trim($this->controllername).'/controllers/'.ucfirst(trim($this->controllername)).'.php', $data))
+				{
+					 //echo 'Unable to write the file';
+				}
+				
+				
+				$data = $this->create_data;
+		
+				if (! write_file('./application/modules/'.trim($this->controllername).'/views/'.trim($this->create_viewname).'.php', $data))
+				{
+					 //echo 'Unable to write the file';
+				}
+				
+				//$data = $this->model_data;
+		
+				//if (! write_file('./application/modules/'.trim($this->controllername).'/models/'.trim(ucfirst($this->modelname)).'.php', $data) )
+				//{
+					// echo 'Unable to write the file';
+				//}
+				
+				$data = $this->js;
+		
+				if (! write_file('./assets/jsku/'.trim($this->javascript_name).$this->gen_id.'.js', $data) )
+				{
+					 //echo 'Unable to write the file';
+				}
+				
+				
+            
             }
         }
-
-		$data_header["tampil_menu"]=''; 
+		
+		$data_header["tampil_menu"]=$this->m_global->display_tree_menu($this->session->userdata('menu')); 
 		$data_header["profil"] ='';
 		$this->load->view('design/header',$data_header);
         $this->load->view('buat_tab', $data);
@@ -96,12 +157,14 @@ class Buat_tab extends CI_Controller {
                 parent::__construct();
 				';
         $controller .= '
-		$this->load->model(\'' . $this->model_other_name . '\');
-        }
+		}
 		
     function index(){
-		$data_header["tampil_menu"]=\'\'; 
-		$data_header["profil"] =\'\';
+		$data_header=array();$data=array();
+		$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>true);
+		$data_header["tampil_menu"]=$this->session->userdata(\'menu\'); 
+		$data_header["profil"] =$this->session->userdata(\'profil\'); 
+		$data["jsku"'.$this->gen_id.']=\''.$this->javascript_name.$this->gen_id.'.js\';
 		';
 		$controller .= '
 		$this->load->view(\'' . $this->header . '\',$data_header);
@@ -118,7 +181,7 @@ function build_view_create() {
         $view .= '
 			
 		<div class="row">
-			<ul class="nav nav-tabs" id="'.trim($this->controllername).'">
+			<ul class="nav nav-tabs" id="'.trim($this->controllername).$this->gen_id.'">
 				';
 					  for($i=0; $i<count($this->a_link_tab); $i++){
 						  if($i==0){$active="active";}else{$active="";}
@@ -131,49 +194,60 @@ function build_view_create() {
 					  
 					
 		</div> ';
+		$data_viewdefault='';
 			 $view .= '
 		<div class="tab-content">';
 			for($i=0; $i<count($this->a_link_tab); $i++){
-				  if($i==0){$active="active";}else{$active="";}
+				  if($i==0){$active="active fade in"; $this->data_viewdefault=trim($this->a_link_tab[$i]).$this->gen_id;}else{$active="";}
 			$view .= '
-			<div class="tab-pane '.$active.'" id="'.trim($this->a_link_tab[$i]).$this->gen_id.'">This is the home pane...</div>';
+			<div class="tab-pane '.$active.' fade" id="'.trim($this->a_link_tab[$i]).$this->gen_id.'">This is the home pane...</div>';
 			}
 			$view.='
 		</div>
-		
-		
-		
-		<script>
-			
-			 $(document).ready(function () {
-				$("#'.trim($this->controllername).' a").click(function (e) {
-					e.preventDefault();
-				  	var url = $(this).attr("data-url");
-					var href = this.hash;
-					var pane = $(this);
-					
-					// ajax load from data-url
-					$(href).load(url,function(result){      
-						pane.tab("show");
-					});
-				});
-				
-				// load first tab content
-				$("#'.trim($this->controllername).'").load($(".active a").attr("data-url"),function(result){
-				  $(".active a").tab("show");
-				});
-
-
-			 })
-			 		
-		</script>
-		
+		echo assets_jsku(array($jsku'.$this->gen_id.'));
 		';
         return $view;
     }
 
+function build_javascript(){
+	$javascript='';
+	$javascript='
+	<script>
+			
+			 $(document).ready(function () {
+				$("#'.trim($this->controllername).$this->gen_id.' a").click(function (e) {
+					e.preventDefault();
+				  	var url = $(this).attr("data-url");
+					var href = this.hash;
+					var pane = $(this);
+					tampil_tab'.$this->gen_id.'(href,url,pane);
+				});
+				
+				$.ajax({
+					 url:$(".active a").attr("data-url"),
+					 success:function(result){
+						 $("#'.trim($this->data_viewdefault).'").html(result);
+						 $(".active a").tab("show");
+					}
+				})
 
 
+			 })
+			 
+			  function tampil_tab'.$this->gen_id.'(target,url,pane){
+				 $.ajax({
+					 url:url,
+					 success:function(result){
+						 $(target).html(result);
+						 pane.tab("show");
+						 }
+					 })
+				 
+				};
+			 		
+		</script>';
+		return $javascript;
+	}
 
 
 

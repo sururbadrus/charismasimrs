@@ -66,6 +66,9 @@ class Crud extends CI_Controller {
 	private $dd = array();
 	private $dp = array();
 	private $ac = array();
+	private $statusdd = 'false';
+	private $statusdp = 'false';
+	private $statusac = 'false';
 	private $penggunaan=1;
 
     public function __construct() {
@@ -206,18 +209,18 @@ class Crud extends CI_Controller {
            for($i=0; $i<count($this->tipe_field_a); $i++){
 				if(trim($this->tipe_field_a[$i])=='dd'){
 					$this->dd[trim($this->form_tampil_a[$i])]=trim($this->load_field_a[$i]);
+					$this->statusdd='true';
 					}
 				else if(trim($this->tipe_field_a[$i])=='dp'){
 					$this->dp[]=trim($this->form_tampil_a[$i]);
+					$this->statusdp='true';
 					}
 				else if(trim($this->tipe_field_a[$i])=='ac'){
 					$this->ac[trim($this->form_tampil_a[$i])]=trim($this->load_field_a[$i]);
+					$this->statusac='true';
 					}
 			}
-		   
-		  // var_dump($this->dd)."<br>";
-		   
-		   
+		  
             $this->controller_data = $controller = $this->build_controller();
             $this->create_data = $view_create = trim($this->build_view_create());
            	$this->model_data = $model = trim($this->build_model());
@@ -312,11 +315,10 @@ class Crud extends CI_Controller {
 
 
 
-
-		$data_header["tampil_menu"]=''; 
-		//$this->m_menu->tampil_menu();
+		$data_header["tampil_menu"]=$this->m_global->display_tree_menu($this->session->userdata('menu')); 
+		
 		$data_header["profil"] ='';
-		//$this->m_menu->tampil_profil();
+		
 
         $this->load->view('design/header',$data_header);
         $this->load->view('ciig', $data);
@@ -352,9 +354,8 @@ class Crud extends CI_Controller {
 	}
 		function index(){
 			$data_header=array();$data=array();
-			$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>false,"dd"=>false,"dp"=>true);
-			$data_header["edit_txt"]=true; 
-			$data_header["tampil_menu"]=$this->session->userdata(\'menu\'); 
+			$data_header=array("edit_txt"=>false,"tree"=>false,"valid"=>true,"jq"=>true,"dt"=>false,"ac"=>'.$this->statusac.',"dd"=>'.$this->statusdd.',"dp"=>'.$this->statusdp.');
+			$data_header["tampil_menu"]=$this->m_global->display_tree_menu($this->session->userdata(\'menu\')); 
 			$data_header["profil"] =$this->session->userdata(\'profil\'); 
 			$data["jsku"]=\''.$this->javascript_name.'.js\';';
 			
@@ -450,7 +451,7 @@ function build_view_create() {
 			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
 				<label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
 					<div class="field">
-						<?=form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control '.$var_validation.'"\')?>
+						<?=form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control '.$var_validation.'  selectpicker dropdown"  data-live-search="true"\')?>
 							<span class="help-block"></span>
 					</div>
 			</div>';
@@ -644,7 +645,7 @@ function build_view_create() {
 		for($i=0; $i<count($this->form_tampil_a); $i++){
 			if(trim($this->validasi_form[$i])=='y'){
 		$model .= ' 
-		$this->form_validation->set_rules(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\', \''.trim($this->caption_field_a[$i]).'\', \'required\');';
+		$this->form_validation->set_rules(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\', \''.trim($this->caption_field_a[$i]).'\', \'required|xss_clean\');';
 		}
 			}
 		$model .= '
@@ -653,7 +654,7 @@ function build_view_create() {
 		for($i=0; $i<count($this->form_tampil_a); $i++){
 			if(trim($this->validasi_form[$i])=='y'){
 		$model .= '
-			if(form_error(\''.trim($this->form_tampil_a[$i]).'\')){
+			if(form_error(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\')){
 				$data[\'inputerror\'][] = \''.trim($this->form_tampil_a[$i].$this->gen_id).'\';
 				$data[\'error_string\'][] = \'Field '.trim($this->caption_field_a[$i]).' Harus Diisi\';
 				$data[\'status\'] = FALSE;
@@ -704,7 +705,7 @@ function build_view_create() {
 				}
 				$model .= '
 				$where['.$i.'] = \''.$this->id_update[$i].' =\'.$data_post[\''.trim($this->id_update[$i].$this->gen_id).'\']; 
-				$sql_q['.$i.']=  $this->db->update_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_,$where['.$i.']); ';
+				$sql_q['.$i.']=  $this->db->update_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_[\''.trim($this->tbl_update[$i]).'\'],$where['.$i.']); ';
 				}
 			$model .= '
 				$this->db->trans_begin();
@@ -885,7 +886,7 @@ $model .=' $tbl.=\'</tr>\';
 		var mygrid'.$this->gen_id.'=jQuery("#list2'.$this->gen_id.'").jqGrid({
 					url: base_js+"/index.php/'.trim(strtolower($this->controllername)).'/view_grid'.$this->gen_id.'", 
 					datatype: "json", 
-					height: "300", 
+					height: "250", 
 					//postData: { id: \'0\' },
 					mtype: "POST",
 					colNames: ['.strtoupper(trim($hdg)).'],
@@ -902,13 +903,13 @@ $model .=' $tbl.=\'</tr>\';
 						$javascript .= '
 					],
 					
-					rowNum: 20,
+					rowNum: 7,
 					rowList: [20,30,50],
 					pager: \'#pager2'.$this->gen_id.'\',
 					sortname: \''.trim($this->orderby).'\',
 					viewrecords: true,
 					sortorder: "'.trim($this->desc_asc).'",
-					autowidth: false,
+					autowidth: true,
 					multiselect: false, 
 					rownumbers: true,
 					rownumWidth:40,
@@ -957,6 +958,11 @@ $javascript .= '
 			$("#'.trim($hsl__.$this->gen_id).'").val(jQuery("#list2'.$this->gen_id.'").jqGrid(\'getCell\',id,\''.trim($hsl__).'\'));';
 						}
 					}
+				}
+			if($this->statusdd=='true'){
+			$javascript .= '
+			$(\'.selectpicker\').selectpicker(\'refresh\');
+			';
 				}
 			$javascript .= '
 			} 
@@ -1052,7 +1058,8 @@ $javascript .= '
 		  $("#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop("checked", false);';
 		  }else if(trim($this->tipe_field_a[$i])=='dd'){
 		  $javascript .= '
-		  $("select#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop(\'selectedIndex\', 0);';
+		  $("select#'.trim($this->form_tampil_a[$i].$this->gen_id).'").prop(\'selectedIndex\', 0);
+		  $("select#'.trim($this->form_tampil_a[$i].$this->gen_id).'").selectpicker(\'refresh\');';
 		  }
 	}
 	$javascript .= '
