@@ -1,51 +1,81 @@
 [
     {
-        "name": "mpdf/mpdf",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "name": "phenx/php-font-lib",
+        "version": "0.2.2",
+        "version_normalized": "0.2.2.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/mpdf/mpdf.git",
-            "reference": "9f2d761e7ac1d89a6752a18036a597fa9ce2d8c7"
+            "url": "https://github.com/PhenX/php-font-lib.git",
+            "reference": "c30c7fc00a6b0d863e9bb4c5d5dd015298b2dc82"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/mpdf/mpdf/zipball/9f2d761e7ac1d89a6752a18036a597fa9ce2d8c7",
-            "reference": "9f2d761e7ac1d89a6752a18036a597fa9ce2d8c7",
+            "url": "https://api.github.com/repos/PhenX/php-font-lib/zipball/c30c7fc00a6b0d863e9bb4c5d5dd015298b2dc82",
+            "reference": "c30c7fc00a6b0d863e9bb4c5d5dd015298b2dc82",
             "shasum": ""
         },
-        "require": {
-            "ext-mbstring": "*",
-            "php": ">=4.3.10"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.7.*"
-        },
-        "time": "2015-06-17 07:26:51",
+        "time": "2014-02-01 15:22:28",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
             "classmap": [
-                "mpdf.php",
-                "classes"
+                "classes/"
             ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "GPL-2.0"
+            "LGPL"
         ],
         "authors": [
             {
-                "name": "Ian Back",
-                "role": "Developer"
+                "name": "Fabien Ménager",
+                "email": "fabien.menager@gmail.com"
             }
         ],
-        "description": "A PHP class to generate PDF files from HTML with Unicode/UTF-8 and CJK support",
-        "homepage": "http://www.mpdf1.com/mpdf/index.php",
-        "keywords": [
-            "pdf",
-            "php",
-            "utf-8"
-        ]
+        "description": "A library to read, parse, export and make subsets of different types of font files.",
+        "homepage": "https://github.com/PhenX/php-font-lib"
+    },
+    {
+        "name": "dompdf/dompdf",
+        "version": "v0.6.2",
+        "version_normalized": "0.6.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dompdf/dompdf.git",
+            "reference": "cc06008f75262510ee135b8cbb14e333a309f651"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dompdf/dompdf/zipball/cc06008f75262510ee135b8cbb14e333a309f651",
+            "reference": "cc06008f75262510ee135b8cbb14e333a309f651",
+            "shasum": ""
+        },
+        "require": {
+            "phenx/php-font-lib": "0.2.*"
+        },
+        "time": "2015-12-07 04:07:13",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "include/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Ménager",
+                "email": "fabien.menager@gmail.com"
+            },
+            {
+                "name": "Brian Sweeney",
+                "email": "eclecticgeek@gmail.com"
+            }
+        ],
+        "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
+        "homepage": "https://github.com/dompdf/dompdf"
     }
 ]

@@ -124,6 +124,9 @@
 			if (isset($money) && $money==true) {
 				echo assets_js(array('pub/js/jquery.maskMoney.min.js'));
             }
+			if (isset($highchart) && $highchart==true) {
+				echo assets_js(array('js/highchart.js','js/highchart3d.js','js/exporting2.js','js/jquery.highchartTable.js'));
+            }
 			
 			
 			

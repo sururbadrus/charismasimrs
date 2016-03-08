@@ -1,5 +1,6 @@
 {
-    "require": {
-        "mpdf/mpdf": "dev-master"
-    }
+  "name" : "html2pdf/codeigniter",
+  "require": {
+    "dompdf/dompdf" : "0.6.*"
+  }
 }

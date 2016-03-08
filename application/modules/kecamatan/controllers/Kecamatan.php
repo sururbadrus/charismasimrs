@@ -13,9 +13,9 @@
 			$data_header["profil"] =$this->session->userdata('profil'); 
 			$data["jsku"]='kecamatan_js.js';
 			$data["kec_aktif33"]=array(1=>'Aktif',0=>'Tidak Aktif');
-			//$this->load->view('design/header',$data_header);
+			$this->load->view('design/header',$data_header);
 			$this->load->view('v_kecamatan',$data);
-			//$this->load->view('design/footer');
+			$this->load->view('design/footer');
 			
 		}  
 		function view_grid33(){

@@ -135,7 +135,7 @@ class Buat_tab extends CI_Controller {
             }
         }
 		
-		$data_header["tampil_menu"]=$this->m_global->display_tree_menu($this->session->userdata('menu')); 
+		$data_header["tampil_menu"]=$this->m_global->display_tree_menu($this->session->userdata(\'menu\')); 
 		$data_header["profil"] ='';
 		$this->load->view('design/header',$data_header);
         $this->load->view('buat_tab', $data);

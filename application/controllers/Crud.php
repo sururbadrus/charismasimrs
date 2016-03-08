@@ -451,7 +451,7 @@ function build_view_create() {
 			<div class="col-xs-12 col-sm-12 col-md-'.$this->style_col.' col-lg-'.$this->style_col.'">
 				<label>'.ucfirst(trim($this->caption_field_a[$i])).'</label>
 					<div class="field">
-						<?=form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control '.$var_validation.'  selectpicker dropdown"  data-live-search="true"\')?>
+						<?php echo form_dropdown(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\',$'.trim($this->form_tampil_a[$i].$this->gen_id).',\'\',\'id="'.trim($this->form_tampil_a[$i].$this->gen_id).'"  class="form-control '.$var_validation.'  selectpicker dropdown"  data-live-search="true"\')?>
 							<span class="help-block"></span>
 					</div>
 			</div>';
@@ -490,7 +490,7 @@ function build_view_create() {
 					';
 					if(trim($this->tipe_field_a[$i])=='dp'){
 					$view .= '
-						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" '.$var_validation.' form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="<?=$'.trim($this->form_tampil_a[$i].$this->gen_id).'?>" />
+						<input name="'.trim($this->form_tampil_a[$i].$this->gen_id).'" id="'.trim($this->form_tampil_a[$i].$this->gen_id).'" type="text"  class=" '.$var_validation.' form-control" placeholder="'.ucfirst(trim($this->caption_field_a[$i])).'" value="<?php echo $'.trim($this->form_tampil_a[$i].$this->gen_id).'?>" />
 							<span class="help-block"></span>';
 										}else{
 					$view .= '
@@ -513,11 +513,11 @@ function build_view_create() {
                	 <input type="button" name="simpandata'.$this->gen_id.'" id="simpandata'.$this->gen_id.'" class="btn btn-success" value="Simpan">&nbsp;&nbsp;
                  <input  type="button" name="batal'.$this->gen_id.'" id="batal'.$this->gen_id.'" class="btn btn-info" value="Batal">&nbsp;&nbsp;
                  <input  type="button" name="hpus'.$this->gen_id.'" id="hpus'.$this->gen_id.'" class="btn btn-danger" value="Hapus">&nbsp;&nbsp;
-				 <!--a href=\'<?=site_url(\''.trim($this->controllername).'/export_pdf'.$this->gen_id.'\')?>\'	target=\'_blank\'  class="btn btn-success"id="tampil_pdf'.$this->gen_id.'" >
+				 <!--a href=\'<?php echo site_url(\''.trim($this->controllername).'/export_pdf'.$this->gen_id.'\')?>\'	target=\'_blank\'  class="btn btn-success"id="tampil_pdf'.$this->gen_id.'" >
 					<i class="glyphicon glyphicon-download-alt"></i>
 					PDF
 				</a-->&nbsp;&nbsp;
-                  <!--a href=\'<?=site_url(\''.trim($this->controllername).'/excell'.$this->gen_id.'\')?>\'	target=\'_blank\' class="btn btn-success"id="tampil_excel'.$this->gen_id.'" >
+                  <!--a href=\'<?php echo site_url(\''.trim($this->controllername).'/excell'.$this->gen_id.'\')?>\'	target=\'_blank\' class="btn btn-success"id="tampil_excel'.$this->gen_id.'" >
 					<i class="glyphicon glyphicon-download-alt"></i>
 					Excel
 				</a-->
@@ -640,12 +640,12 @@ function build_view_create() {
 		$data[\'error_string\'] = array();
 		$data[\'inputerror\'] = array();
 		$data[\'status\'] = TRUE;
-		$data_post=$this->security->xss_clean($_POST);
+		$data_post=$this->input->post();
 		';
 		for($i=0; $i<count($this->form_tampil_a); $i++){
 			if(trim($this->validasi_form[$i])=='y'){
 		$model .= ' 
-		$this->form_validation->set_rules(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\', \''.trim($this->caption_field_a[$i]).'\', \'required|xss_clean\');';
+		$this->form_validation->set_rules(\''.trim($this->form_tampil_a[$i].$this->gen_id).'\', \''.trim($this->caption_field_a[$i]).'\', \'required\');';
 		}
 			}
 		$model .= '
@@ -669,23 +669,19 @@ function build_view_create() {
 		$model .= '
 			switch ($data_post["act"]) {
 				case \'Simpan\':
+				
+				$this->db->trans_begin();
 				';
 				for($i=0; $i<count($this->tbl_insert); $i++){
 				$arr_insr_=array();
 				$arr_insr = explode(',',strtolower(trim($this->field_insert[$i])));
 				for($iub=0; $iub<count($arr_insr); $iub++){
-					$model .= '$arr_insr_[\''.trim($this->tbl_insert[$i]).'\'][\''.trim($arr_insr[$iub]).'\']=$data_post["'.trim($arr_insr[$iub].$this->gen_id).'"];
-					';
+				$model .= '$arr_insr_[\''.trim($this->tbl_insert[$i]).'\'][\''.trim($arr_insr[$iub]).'\']=$data_post["'.trim($arr_insr[$iub].$this->gen_id).'"];
+				';
 				}
-			$model .= '
-			 $sql_q['.$i.']= $this->db->insert_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_[\''.trim($this->tbl_insert[$i]).'\']); 
-					 ';}
-			$model .= '
-			$this->db->trans_begin();
-			for($iub=0; $iub<count($sql_q); $iub++){
-				$this->db->query($sql_q[$iub]);
-			}
-				if ($this->db->trans_status() === FALSE){
+	$model .= '$this->db->insert(\''.trim($this->tbl_insert[$i]).'\',$arr_insr_[\''.trim($this->tbl_insert[$i]).'\']);
+	';}
+	$model .= '	if ($this->db->trans_status() === FALSE){
 							$this->db->trans_rollback();
 							echo json_encode(array(\'ket\'=>"Gagal Insert",\'dt\'=>$data)) ;
 					}
@@ -695,6 +691,7 @@ function build_view_create() {
 					}
 					break;
 				case \'Ubah\':
+				$this->db->trans_begin();
 				';
 				for($i=0; $i<count($this->tbl_update); $i++){
 				$arr_insr_=array();
@@ -704,14 +701,11 @@ function build_view_create() {
 				';
 				}
 				$model .= '
-				$where['.$i.'] = \''.$this->id_update[$i].' =\'.$data_post[\''.trim($this->id_update[$i].$this->gen_id).'\']; 
-				$sql_q['.$i.']=  $this->db->update_string(\''.trim($this->tbl_insert[$i]).'\', $arr_insr_[\''.trim($this->tbl_update[$i]).'\'],$where['.$i.']); ';
+				$this->db->where(array(\''.trim($this->id_update[$i]).'\' =>$data_post[\''.trim($this->id_update[$i].$this->gen_id).'\']));
+				$this->db->update(\''.trim($this->tbl_update[$i]).'\',$arr_insr_[\''.trim($this->tbl_update[$i]).'\']);
+				';
 				}
 			$model .= '
-				$this->db->trans_begin();
-					for($iub=0; $iub<count($sql_q); $iub++){
-						$this->db->query($sql_q[$iub]);
-					}
 				if ($this->db->trans_status() === FALSE){
 						$this->db->trans_rollback();
 						echo json_encode(array(\'ket\'=>"Gagal Update",\'dt\'=>$data)) ;
@@ -1008,12 +1002,13 @@ $javascript .= '
 			beforeSubmit:  function (formData, jqForm, options) { 
 							if($("#form_'.trim($this->controllername).$this->gen_id.'").validationEngine("validate")){
 								var conf = confirm("Yakin Akan "+act+" Data Ini?");
-								if(conf) return true; else return false;
+								if(conf) {$("#curtain").css("display","");return true; }else return false;
 							}else{
 								return false;
 							}
 						} ,
 			success:       function(data)  {
+							$("#curtain").css("display","none");
 							if(data.dt.status) 
 							{
 								$("#simpandata'.$this->gen_id.'").val("Simpan");
